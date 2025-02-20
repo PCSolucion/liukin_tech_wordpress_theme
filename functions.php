@@ -51,7 +51,7 @@ function liukin_widgets(){
 add_action('widgets_init', 'liukin_widgets');
 //Words in Excerpt
 function custom_excerpt_length( $length ) {
-	return 60;
+	return 37;
 }
 add_filter( 'excerpt_length', 'custom_excerpt_length', 999 );
 //Delete[...]from Excerpt

@@ -1,4 +1,5 @@
 <?php get_header();?>
+<?php get_template_part('template-parts/search-form', 'search-form');?>
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -20,5 +21,5 @@
             </div>
         </div>
     </div>
-    <?php get_template_part('template-parts/search-form', 'search-form');?>
+    
 <?php get_footer();?>

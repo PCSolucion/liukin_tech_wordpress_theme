@@ -22,7 +22,7 @@
                                 the_post_thumbnail('medium');
                             ?>
                         </div>
-                        <div class="col-lg-8">
+                        <div class="col-lg-8 homedestext">
                             <?php
                                 the_excerpt();
                             ?>
