@@ -14,7 +14,6 @@ Este tema, al igual que WordPress, está licenciado bajo la GPL.
 */
 
 
-
 /* GENERAL */
 body {
     background-color: #fafafa !important;
@@ -46,7 +45,7 @@ body {
 /* WEB BROWSER */
 .search-web {
     height: 190px;
-    background: url(./img/fondose.jpg);
+    background-color:#212428;;
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .25);
 }
 .search-form2 {
@@ -102,7 +101,7 @@ input[type="search"] {
     margin-top: -5px !important;
 }
 .btn-success {
-    background-color: #008ec2 !important;
+    background-color: #00665e !important;
 }
 
 /* HOME POSTS */
@@ -121,10 +120,9 @@ input[type="search"] {
 }
 .homedesc img {
     width: 100%;
-    height: suto;
+    height: auto;
     border-radius: 2px;
     margin-top: 5px;
-	max-height: 105px;
 }
 .homedestext{
 	margin-top: 10px;;
@@ -144,7 +142,7 @@ input[type="search"] {
     position: relative;
     margin: 0 16px 8px 0;
     padding: 0 10px 0 12px;
-    background: #008ec2;
+    background: #00665e;
     border-radius: 3px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     color: #fff;
@@ -166,7 +164,7 @@ input[type="search"] {
 /* CATEGORY AND DATE MINIBOX */
 .sin-categoria, .cathome, .sin-categoria:hover {
     color: white;
-    background-color: #008ec2;
+    background-color: #00665e;
     text-transform: uppercase;
     font-size: 0.575rem;
     padding: 4px 5px;
@@ -190,7 +188,7 @@ input[type="search"] {
     font-size: 15.5px !important;
     font-weight: 500;
     padding-top: 9px;
-    border-top: 2px solid #008ec2 !important;
+    border-top: 2px solid #00665e !important;
     padding-bottom: 9px;
     padding-left: 10px;
     background-color: #f7f7f7 !important;
@@ -207,11 +205,11 @@ input[type="search"] {
     margin-top: 30px;
 }
 .single-post h1 {
-    border-left: 3px solid #008ec2;
+    border-left: 3px solid #00665e;
     padding-left: 8px;
 }
 .single-post .entry-content h2, .single .entry-content h3, .single .entry-content h4, .single .entry-content h5 {
-    border-left: 2px solid #008ec2;
+    border-left: 2px solid #00665e;
     padding-left: 6px;
     margin-bottom: 20px;
     margin-top: 10px;
@@ -243,7 +241,7 @@ input[type="search"] {
 }
 .single .col-lg-8 ul li::before {
     content: "■";
-    color: #008ec2;
+    color: #00665e;
     font-size: 80%;
     font-weight: bold;
     display: inline-block;
@@ -429,3 +427,5 @@ blockquote p {
     width: 80%;
     margin-right: auto;
 }
+
+
