@@ -45,7 +45,7 @@ body {
 /* WEB BROWSER */
 .search-web {
     height: 190px;
-    background-color:#212428;;
+    background: url(./img/fondose.jpg);
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .25);
 }
 .search-form2 {
@@ -54,6 +54,7 @@ body {
 }
 #search-field2 {
     height: 55px;
+    padding-left: 55px;
 }
 .btn-search {
     width: 3%;
@@ -67,7 +68,7 @@ body {
     padding: 0;
     cursor: pointer;
     justify-content: center;
-    margin-left: 20px;
+    margin-left: 30px;
     margin-top: 13px;
 }
 .btn-search svg {
@@ -77,39 +78,40 @@ body {
     transition: all .2s ease-out, color .2s ease-out;
 }
 input[type="search"] {
-    width: 77%;
+    width: 80%;
     box-sizing: border-box;
     padding: 8px 45px;
     border: 1px solid #ebeced;
     background-color: #fff;
     border-radius: 2px;
+    margin-left: 2px;
 }
 .btn-lg {
     width: 20%;
     text-transform: none;
     height: 55px !important;
     margin-left: -6px;
-    padding: 0 !important;
     font-size: 1rem !important;
     line-height: 0 !important;
-    border-radius: 3px !important;
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
-    border-bottom-left-radius: 0 !important;
-    border-top-left-radius: 0 !important;
+    border-top-right-radius: 3px !important;
+    border-bottom-right-radius: 3px !important;
     border: 0px solid white !important;
-    margin-top: -5px !important;
+    margin-top: -4px !important;
+    font-weight: 500 !important;
 }
 .btn-success {
-    background-color: #00665e !important;
+    background-color: #008ec2 !important;
 }
 
 /* HOME POSTS */
+.posts-home{
+    margin-right: -5px;
+}
 .home a:hover {
     text-decoration: none;
 }
 .phome {
-    margin-top: 25px;
+    margin-top: 10px;
     border: 1px solid #d3d3d361;
     background-color: white;
     border-radius: 5px;
@@ -142,7 +144,7 @@ input[type="search"] {
     position: relative;
     margin: 0 16px 8px 0;
     padding: 0 10px 0 12px;
-    background: #00665e;
+    background: #008ec2;
     border-radius: 3px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     color: #fff;
@@ -164,7 +166,7 @@ input[type="search"] {
 /* CATEGORY AND DATE MINIBOX */
 .sin-categoria, .cathome, .sin-categoria:hover {
     color: white;
-    background-color: #00665e;
+    background-color: #008ec2;
     text-transform: uppercase;
     font-size: 0.575rem;
     padding: 4px 5px;
@@ -179,7 +181,7 @@ input[type="search"] {
     padding-right: 7px !important;
     padding-left: 7px !important;
     background-color: white;
-    margin-top: 30px;
+    margin-top: 10px;
     border: 1px solid #3333331c;
     border-radius: 3px;
     box-shadow: 0 2px 0 0 rgba(0, 0, 0, .016);
@@ -188,7 +190,7 @@ input[type="search"] {
     font-size: 15.5px !important;
     font-weight: 500;
     padding-top: 9px;
-    border-top: 2px solid #00665e !important;
+    border-top: 2px solid #008ec2 !important;
     padding-bottom: 9px;
     padding-left: 10px;
     background-color: #f7f7f7 !important;
@@ -199,17 +201,21 @@ input[type="search"] {
     margin-top: 12px;
 }
 
+
 /* CONTENT POST */
-.single .col-lg-8 {
+.single .posts-single{
     background-color: white;
-    margin-top: 30px;
+    margin-top: 10px;
+    border: 1px solid #d3d3d361;
+    border-right: 0px !important;
+    border-radius: 5px;
 }
 .single-post h1 {
-    border-left: 3px solid #00665e;
+    border-left: 3px solid #008ec2;
     padding-left: 8px;
 }
 .single-post .entry-content h2, .single .entry-content h3, .single .entry-content h4, .single .entry-content h5 {
-    border-left: 2px solid #00665e;
+    border-left: 2px solid #008ec2;
     padding-left: 6px;
     margin-bottom: 20px;
     margin-top: 10px;
@@ -241,7 +247,7 @@ input[type="search"] {
 }
 .single .col-lg-8 ul li::before {
     content: "■";
-    color: #00665e;
+    color: #008ec2;
     font-size: 80%;
     font-weight: bold;
     display: inline-block;
@@ -351,7 +357,7 @@ blockquote p {
     padding-left: 15px;
     margin-right: auto;
     margin-left: auto;
-    background-color: #2f3439;
+    background-color: #212428;
     margin-bottom: -10px;
 }
 .titfooter {
@@ -428,4 +434,11 @@ blockquote p {
     margin-right: auto;
 }
 
+pre {
+    background-color: #212428;
+    color: #fafafac2;
+    padding-left: 17px;
+    padding-bottom: 10px;
+    border-radius: 3px;
+}
 

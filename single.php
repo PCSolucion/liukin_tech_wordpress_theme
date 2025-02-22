@@ -2,7 +2,7 @@
     <?php get_template_part('template-parts/search-form', 'search-form');?>
     <div class="container">
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12 posts-single">
                 <?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
                     <div class="card-body entry-content">
                         <h1><?php the_title();?></h1>
@@ -26,7 +26,6 @@
                 </div>
             </div>
                 <?php endwhile; endif; ?>
-                <?php get_sidebar();?>
         </div>
         </div>
 <?php get_footer();?>
