@@ -27,6 +27,11 @@ body {
     width: 60px;
     height: 60px;
 }
+.logow img{
+    width: 55px;
+    height: auto;
+    padding-top: 67px;
+}
 
 /* MENU */
 .navbar{
@@ -440,5 +445,6 @@ pre {
     padding-left: 17px;
     padding-bottom: 10px;
     border-radius: 3px;
+    padding-top: 6px;
 }
 

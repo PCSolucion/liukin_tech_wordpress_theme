@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Soluciones, guías y trucos en español para todo lo relacionado en tecnología, informática y videojuegos.">
     <?php wp_head();?>
   </head>
   <body <?php body_class();?>>
