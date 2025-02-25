@@ -164,4 +164,16 @@ function remove_block_library_css() {
 }
 add_action('wp_enqueue_scripts', 'remove_block_library_css', 100);
 
+// Cerrar comentarios en el frontend
+function disable_comments_status() {
+    return false;
+}
+add_filter('comments_open', 'disable_comments_status', 20, 2);
+add_filter('pings_open', 'disable_comments_status', 20, 2);
+
+// Ocultar la sección de comentarios en el frontend
+function disable_comments_hide_existing_comments($comments) {
+    return array();
+}
+add_filter('comments_array', 'disable_comments_hide_existing_comments', 10, 2);
 ?>
