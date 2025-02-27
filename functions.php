@@ -176,4 +176,48 @@ function disable_comments_hide_existing_comments($comments) {
     return array();
 }
 add_filter('comments_array', 'disable_comments_hide_existing_comments', 10, 2);
+
+// Función para reemplazar el dominio de YouTube por youtube-nocookie.com
+function replace_youtube_embed_url($html, $url, $attr, $post_id) {
+    if (strpos($url, 'youtube.com') !== false) {
+        // Reemplazar el dominio de YouTube por youtube-nocookie.com
+        $nocookie_url = str_replace('youtube.com', 'youtube-nocookie.com', $url);
+        // Agregar parámetros adicionales para mejorar la privacidad
+        $nocookie_url = add_query_arg(array(
+            'rel' => 0,   // No mostrar videos relacionados al final
+            'modestbranding' => 1,  // Minimizar el branding de YouTube
+            'iv_load_policy' => 3   // Deshabilitar las anotaciones
+        ), $nocookie_url);
+        // Reemplazar la URL en el HTML incrustado
+        $html = str_replace($url, $nocookie_url, $html);
+    }
+    return $html;
+}
+add_filter('embed_oembed_html', 'replace_youtube_embed_url', 10, 4);
+add_filter('embed_handler_html', 'replace_youtube_embed_url', 10, 4);
+
+// Deshabilitar el uso de cookies en WordPress para usuarios no autenticados
+add_action('init', 'disable_cookies_for_guests', 1);
+function disable_cookies_for_guests() {
+    if (!is_user_logged_in()) {
+        // Deshabilitar sesiones de PHP
+        if (session_id()) {
+            session_unset();
+            session_destroy();
+            setcookie(session_name(), '', time() - 42000, '/');
+        }
+        
+        // Eliminar cualquier cookie que ya se haya establecido
+        foreach ($_COOKIE as $cookie_name => $cookie_value) {
+            setcookie($cookie_name, '', time() - 3600, '/');
+        }
+        
+        // Deshabilitar la configuración de cookies
+        $_COOKIE = array();
+        $_SESSION = array();
+    }
+}
+
+// Deshabilitar el uso de cookies para comentarios
+add_filter('comment_cookie_lifetime', '__return_zero');
 ?>
