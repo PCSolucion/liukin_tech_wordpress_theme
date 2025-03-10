@@ -15,19 +15,6 @@
                     <a href="<?php the_permalink($post);?>">
                     <h2 class="entry-title <?php echo esc_attr($cat->name);?>" ><?php the_title();?></h2>
                     </a>
-                    <hr/> 
-                    <div class="row">
-                        <div class="col-lg-4 homedesc">
-                            <?php 
-                                the_post_thumbnail('medium');
-                            ?>
-                        </div>
-                        <div class="col-lg-8 homedestext">
-                            <?php
-                                the_excerpt();
-                            ?>
-                        </div>
-                    </div>
                 </div>
                 <?php endwhile; endif; ?> 
                 </div>
