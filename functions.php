@@ -18,32 +18,15 @@ function themename_custom_logo_setup() {
 }
 add_action( 'after_setup_theme', 'themename_custom_logo_setup' );
 
-// Requiere los archivos necesarios para el menú
-require_once get_template_directory() . '/template-parts/class-wp-bootstrap-navwalker.php';
-
 /**
  * Encola hojas de estilo y scripts.
  */
 function liukin_agregar_css_js() {
     wp_enqueue_style( 'style', get_stylesheet_uri() );
-    wp_enqueue_style( 'bootstrap', get_template_directory_uri() . '/css/bootstrap.min.css' );
+
 }
 add_action( 'wp_enqueue_scripts', 'liukin_agregar_css_js' );
 
-/**
- * Registra el "navwalker" personalizado para el menú.
- */
-function register_navwalker() {
-    require_once get_template_directory() . '/template-parts/class-wp-bootstrap-navwalker.php';
-}
-add_action( 'after_setup_theme', 'register_navwalker' );
-
-/**
- * Registra los menús de navegación.
- */
-register_nav_menus( array(
-    'primary' => __( 'Primary Menu', 'THEMENAME' ),
-) );
 
 // Soporte para miniaturas de publicaciones
 /**
@@ -57,45 +40,8 @@ function liukin_setup() {
 }
 add_action( 'after_setup_theme', 'liukin_setup' );
 
-// Añadir barra lateral
-/**
- * Registra el área de widgets en la barra lateral derecha.
- */
-function liukin_widgets() {
-    register_sidebar( array(
-        'id'            => 'widgets-derecha',
-        'name'          => __( 'Right Sidebar' ),
-        'before_widget' => '<div id="%1$s" class="widget %2$s sidebar-widget">',
-        'after_widget'  => '</div>',
-        'before_title'  => '<h4>',
-        'after_title'   => '</h4>',
-    ) );
-}
-add_action('widgets_init', 'liukin_widgets');
 
-// Longitud personalizada del extracto
-/**
- * Establece la longitud personalizada del extracto.
- *
- * @param int $length El número de palabras en el extracto.
- * @return int Longitud modificada del extracto.
- */
-function custom_excerpt_length( $length ) {
-    return 37;
-}
-add_filter( 'excerpt_length', 'custom_excerpt_length', 999 );
 
-// Eliminar [...] del extracto
-/**
- * Elimina el texto [...] del extracto.
- *
- * @param string $more El texto mostrado dentro del enlace "more".
- * @return string Cadena vacía para reemplazar el [...].
- */
-function new_excerpt_more( $more ) {
-    return '';
-}
-add_filter('excerpt_more', 'new_excerpt_more');
 
 // Forzar atributo alt en imágenes
 /**
