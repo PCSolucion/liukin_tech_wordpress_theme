@@ -1,10 +1,4 @@
 <?php
-// Soporte de logotipo personalizado
-add_theme_support( 'custom-logo' );
-
-/**
- * Configura el logotipo personalizado con parámetros predeterminados.
- */
 function themename_custom_logo_setup() {
     $defaults = array(
         'height'      => 55,
@@ -39,10 +33,6 @@ function liukin_setup() {
     add_theme_support( 'title-tag' );
 }
 add_action( 'after_setup_theme', 'liukin_setup' );
-
-
-
-
 // Forzar atributo alt en imágenes
 /**
  * Asegura que todas las imágenes tengan atributos alt.
