@@ -22,20 +22,26 @@ function liukin_agregar_css_js() {
     // Obtener la ruta del CSS
     $css_path = get_stylesheet_uri();
     $css_version = filemtime(get_stylesheet_directory() . '/style.css');
+    wp_enqueue_style('liukin-style', $css_path, array(), $css_version);
+
+    // Agregar JavaScript para scroll infinito
+    wp_enqueue_script('liukin-infinite-scroll', get_template_directory_uri() . '/js/infinite-scroll.js', array(), '1.0', true);
     
-    // Verificar si es móvil
-    if (wp_is_mobile()) {
-        // Para móviles, cargar el CSS de manera asíncrona
-        add_action('wp_head', function() use ($css_path, $css_version) {
-            ?>
-            <link rel="preload" href="<?php echo esc_url($css_path); ?>?ver=<?php echo $css_version; ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
-            <noscript><link rel="stylesheet" href="<?php echo esc_url($css_path); ?>?ver=<?php echo $css_version; ?>"></noscript>
-            <?php
-        }, 1);
-    } else {
-        // Para desktop, cargar normalmente
-        wp_enqueue_style('liukin-style', $css_path, array(), $css_version);
-    }
+    // Agregar atributo defer al script
+    add_filter('script_loader_tag', function($tag, $handle) {
+        if ('liukin-infinite-scroll' === $handle) {
+            return str_replace(' src', ' defer src', $tag);
+        }
+        return $tag;
+    }, 10, 2);
+    
+    // Pasar variables a JavaScript
+    wp_add_inline_script('liukin-infinite-scroll', 'window.liukinInfinite = ' . json_encode(array(
+        'ajaxurl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('liukin_infinite_scroll'),
+        'loading' => __('Cargando...', 'liukin'),
+        'no_more' => __('No hay más entradas', 'liukin')
+    )) . ';', 'before');
 }
 add_action('wp_enqueue_scripts', 'liukin_agregar_css_js');
 
@@ -174,4 +180,51 @@ function disable_cookies_for_guests() {
 
 // Deshabilitar el uso de cookies para comentarios
 add_filter('comment_cookie_lifetime', '__return_zero');
+
+// Función para manejar la carga de posts por AJAX
+function liukin_load_more_posts() {
+    check_ajax_referer('liukin_infinite_scroll', 'nonce');
+    
+    $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
+    
+    $args = array(
+        'post_type' => 'post',
+        'posts_per_page' => get_option('posts_per_page'),
+        'paged' => $page,
+        'post_status' => 'publish'
+    );
+    
+    $query = new WP_Query($args);
+    
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
+            $categories = get_the_category();
+            ?>
+            <div class="card-body phome">
+                <?php 
+                if (!empty($categories)) {
+                    foreach ($categories as $cat) {
+                        printf(
+                            '<a href="%s" class="cathome %s" title="Ver todos los post de %s">%s</a> ',
+                            esc_url(get_category_link($cat->term_id)),
+                            esc_attr($cat->slug),
+                            esc_attr($cat->name),
+                            esc_html($cat->name)
+                        );
+                    }
+                }
+                ?>
+                <a href="<?php the_permalink(); ?>">
+                    <h2 class="entry-title"><?php the_title(); ?></h2>
+                </a>
+            </div>
+            <?php
+        }
+    }
+    wp_reset_postdata();
+    die();
+}
+add_action('wp_ajax_liukin_load_more_posts', 'liukin_load_more_posts');
+add_action('wp_ajax_nopriv_liukin_load_more_posts', 'liukin_load_more_posts');
 ?>
