@@ -16,10 +16,28 @@ add_action( 'after_setup_theme', 'themename_custom_logo_setup' );
  * Encola hojas de estilo y scripts.
  */
 function liukin_agregar_css_js() {
-    wp_enqueue_style( 'style', get_stylesheet_uri() );
-
+    // Desregistrar el estilo actual
+    wp_deregister_style('style');
+    
+    // Obtener la ruta del CSS
+    $css_path = get_stylesheet_uri();
+    $css_version = filemtime(get_stylesheet_directory() . '/style.css');
+    
+    // Verificar si es móvil
+    if (wp_is_mobile()) {
+        // Para móviles, cargar el CSS de manera asíncrona
+        add_action('wp_head', function() use ($css_path, $css_version) {
+            ?>
+            <link rel="preload" href="<?php echo esc_url($css_path); ?>?ver=<?php echo $css_version; ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
+            <noscript><link rel="stylesheet" href="<?php echo esc_url($css_path); ?>?ver=<?php echo $css_version; ?>"></noscript>
+            <?php
+        }, 1);
+    } else {
+        // Para desktop, cargar normalmente
+        wp_enqueue_style('liukin-style', $css_path, array(), $css_version);
+    }
 }
-add_action( 'wp_enqueue_scripts', 'liukin_agregar_css_js' );
+add_action('wp_enqueue_scripts', 'liukin_agregar_css_js');
 
 
 // Soporte para miniaturas de publicaciones
