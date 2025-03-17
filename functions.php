@@ -27,21 +27,40 @@ function liukin_agregar_css_js() {
     // Agregar JavaScript para scroll infinito
     wp_enqueue_script('liukin-infinite-scroll', get_template_directory_uri() . '/js/infinite-scroll.js', array(), '1.0', true);
     
+    // Agregar JavaScript para lightbox solo en single.php
+    if (is_single()) {
+        wp_enqueue_script('liukin-lightbox', get_template_directory_uri() . '/js/lightbox.js', array(), '1.0', true);
+    }
+    
     // Agregar atributo defer al script
     add_filter('script_loader_tag', function($tag, $handle) {
-        if ('liukin-infinite-scroll' === $handle) {
+        if ('liukin-infinite-scroll' === $handle || 'liukin-lightbox' === $handle) {
             return str_replace(' src', ' defer src', $tag);
         }
         return $tag;
     }, 10, 2);
     
-    // Pasar variables a JavaScript
-    wp_add_inline_script('liukin-infinite-scroll', 'window.liukinInfinite = ' . json_encode(array(
+    // Preparar variables para JavaScript
+    $js_vars = array(
         'ajaxurl' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('liukin_infinite_scroll'),
         'loading' => __('Cargando...', 'liukin'),
         'no_more' => __('No hay más entradas', 'liukin')
-    )) . ';', 'before');
+    );
+
+    // Agregar variables específicas según el tipo de página
+    if (is_archive()) {
+        $term = get_queried_object();
+        if ($term instanceof WP_Term) {
+            $js_vars['termId'] = $term->term_id;
+            $js_vars['taxonomy'] = $term->taxonomy;
+        }
+    } elseif (is_search()) {
+        $js_vars['searchQuery'] = get_search_query();
+    }
+    
+    // Pasar variables a JavaScript
+    wp_add_inline_script('liukin-infinite-scroll', 'window.liukinInfinite = ' . json_encode($js_vars) . ';', 'before');
 }
 add_action('wp_enqueue_scripts', 'liukin_agregar_css_js');
 

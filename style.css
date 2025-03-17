@@ -21,6 +21,80 @@ body {
     display: none;
 }
 
+/* LIGHTBOX */
+.lightbox {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    cursor: pointer;
+}
+
+.lightbox-content {
+    position: relative;
+    max-width: 95%;
+    max-height: 95vh;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.lightbox-content img {
+    max-width: 100%;
+    max-height: 85vh;
+    object-fit: contain;
+    cursor: zoom-in;
+    transition: transform 0.3s ease;
+}
+
+.lightbox-content img.zoomed {
+    cursor: zoom-out;
+    transform: scale(1.5);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 5px 10px;
+    background: none;
+    border: none;
+    transition: opacity 0.3s ease;
+    z-index: 1001;
+    width: 50px;
+    height: 50px;
+    line-height: 40px;
+    text-align: center;
+}
+
+.lightbox-close:hover {
+    opacity: 0.8;
+}
+
+/* Ajuste para la barra de administración de WordPress */
+.admin-bar .lightbox-content {
+    margin-top: 0;
+}
+
+/* Ocultar el botón de cerrar cuando la imagen está ampliada */
+.lightbox-content img.zoomed ~ .lightbox-close,
+.lightbox-content img.zoomed + .lightbox-close {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
 /* LOGO */
 .custom-logo-link img {
     width: 60px;
@@ -253,7 +327,6 @@ input[type="search"] {
     background-color: white;
     margin-top: 10px;
     border: 1px solid #d3d3d361;
-    border-right: 0px !important;
     border-radius: 5px;
 }
 .single-post h1 {
@@ -362,6 +435,9 @@ blockquote p {
 }
 
 /* ARCHIVE */
+.phome p{
+    padding-right: 20px !important;
+}
 .name-archive {
     line-height: 0.8;
 }
