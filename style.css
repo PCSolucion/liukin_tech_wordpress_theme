@@ -359,7 +359,7 @@ p img {
   text-align: center;
 }
 
-
+/* Utilidades */
 .nope { display: none; }
 .py-4 { padding: 1.5rem 0; }
 .mb-2 { margin-bottom: .5rem; }
@@ -373,4 +373,125 @@ p img {
   .phome {
     padding: 10px;
   }
+}
+/* Estilos del formulario de búsqueda */
+.search-web {
+    height: 190px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 9px 0px;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+}
+
+.search-wrapper {
+    display: flex;
+    align-items: flex-start; /* Cambiado para permitir el ajuste vertical */
+    width: 100%;
+    position: relative; /* Añadido para permitir posicionamiento preciso */
+}
+
+.logo-container {
+    flex-shrink: 0;
+    width: auto;
+}
+
+.search-container-wrapper {
+    flex: 1;
+    position: relative;
+    top: 76px; /* Ajuste vertical solicitado */
+    left: 20px; /* Ajuste horizontal solicitado */
+}
+
+.logow {
+    display: block;
+}
+
+.logow img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.search-form {
+    width: 98%;
+}
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.8rem 3rem 0.8rem 1.5rem;
+    font-size: 1rem;
+    color: var(--text-color);
+    background-color: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 142, 194, 0.1);
+}
+
+.search-submit {
+    position: absolute;
+    right: 1rem;
+    padding: 0.5rem;
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.search-submit:hover {
+    color: var(--primary-color);
+}
+
+/* Estilos responsive */
+@media (max-width: 991px) {
+    .search-web {
+        height: auto;
+        padding: 1rem 0;
+    }
+
+    .search-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .logo-container {
+        width: auto;
+        margin-bottom: 10px;
+    }
+
+    .search-container-wrapper {
+        width: 100%;
+        /* Resetear posicionamiento en móvil */
+        top: 0;
+        left: 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .search-web {
+        padding: 0.8rem 0;
+    }
+
+    .logow img {
+        width: 45px;
+        height: auto;
+    }
+
+    .search-input {
+        padding: 0.7rem 2.5rem 0.7rem 1rem;
+        font-size: 0.85rem;
+    }
 }
