@@ -15,6 +15,8 @@
                         }
                     ?>
 					</div>
+					<br>
+					<br>
 					<div class="lcontent">
                     <?php
                     echo the_content();
