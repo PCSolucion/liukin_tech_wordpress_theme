@@ -244,10 +244,14 @@ function liukin_load_more_posts() {
     wp_reset_postdata();
     die();
 }
+// Modificar el orden de posts en las páginas de etiquetas
+function modify_tag_query($query) {
+    if ($query->is_tag() && $query->is_main_query()) {
+        $query->set('orderby', 'date');
+        $query->set('order', 'ASC'); // ASC para orden ascendente (más antiguos primero)
+    }
+}
+add_action('pre_get_posts', 'modify_tag_query');
 add_action('wp_ajax_liukin_load_more_posts', 'liukin_load_more_posts');
 add_action('wp_ajax_nopriv_liukin_load_more_posts', 'liukin_load_more_posts');
-function theme_enqueue_scripts() {
-    wp_enqueue_script('theme-toggle', get_template_directory_uri() . '/js/theme-toggle.js', array(), '1.0.0', true);
-}
-add_action('wp_enqueue_scripts', 'theme_enqueue_scripts');
 ?>
