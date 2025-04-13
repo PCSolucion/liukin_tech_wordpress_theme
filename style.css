@@ -199,7 +199,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family:'Roboto';
   height: 24px;
   text-align: center;
-  width: 82px;
+  width: 75px;
   line-height: 24px;
   margin:9px 15px 0 0;
   border-radius: 3px;
@@ -510,4 +510,115 @@ p img {
         padding: 0.7rem 2.5rem 0.7rem 1rem;
         font-size: 0.85rem;
     }
+}
+
+.containerd {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2em;
+    width: 800px;
+    height: 500px;
+    transition: all 400ms;
+    padding: 20px;
+}
+
+.item {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    grid-row: 1;
+}
+
+.item a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
+.box {
+    position: relative;
+    background: var(--img) center center;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    transition: all 400ms ease;
+}
+
+/* Efecto hover en el contenedor */
+.containerd:hover .box {
+    filter: grayscale(100%) opacity(24%);
+}
+
+/* Efecto hover en elementos individuales */
+.containerd .item:hover .box {
+    filter: grayscale(0%) opacity(100%);
+}
+
+/* Ajustes de las columnas en hover */
+.containerd:has(.item:nth-child(1):hover) {
+    grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+}
+
+.containerd:has(.item:nth-child(2):hover) {
+    grid-template-columns: 1fr 3fr 1fr 1fr 1fr;
+}
+
+.containerd:has(.item:nth-child(3):hover) {
+    grid-template-columns: 1fr 1fr 3fr 1fr 1fr;
+}
+
+.containerd:has(.item:nth-child(4):hover) {
+    grid-template-columns: 1fr 1fr 1fr 3fr 1fr;
+}
+
+.containerd:has(.item:nth-child(5):hover) {
+    grid-template-columns: 1fr 1fr 1fr 1fr 3fr;
+}
+
+/* Desplazamiento vertical */
+.containerd .item:nth-child(odd) .box {
+    transform: translateY(-16px);
+}
+
+.containerd .item:nth-child(even) .box {
+    transform: translateY(16px);
+}
+
+/* Texto emergente */
+.box::after {
+    content: attr(data-text);
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: #000;
+    color: #fff;
+    padding: 10px 10px 10px 14px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: all 400ms;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+.containerd .item:hover .box::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    transition-delay: 400ms;
+}
+
+/* Área de hover extendida */
+.item::before {
+    content: '';
+    position: absolute;
+    top: -1em;
+    left: -1em;
+    right: -1em;
+    bottom: -1em;
+    z-index: -1;
 }
