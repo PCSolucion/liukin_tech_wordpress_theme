@@ -1,285 +1,323 @@
 <?php
-/**
- * Funciones principales del tema Liukin Tech
- * 
- * @package Liukin
- * @version 1.1.0
- * @since 2025-04-12
- */
-
-// Evitar acceso directo al archivo
-if (!defined('ABSPATH')) {
-    exit;
-}
-
-/**
- * Configuración inicial del tema
- */
-function liukin_setup() {
-    $features = [
-        'post-thumbnails',
-        'title-tag',
-        'html5' => [
-            'search-form',
-            'comment-form',
-            'comment-list',
-            'gallery',
-            'caption',
-            'style',
-            'script'
-        ],
-        'custom-logo' => [
-            'height' => 55,
-            'width' => 55,
-            'flex-height' => true,
-            'flex-width' => true,
-            'header-text' => ['site-title', 'site-description'],
-            'unlink-homepage-logo' => true
-        ]
-    ];
-
-    foreach ($features as $feature => $args) {
-        if (is_array($args)) {
-            add_theme_support($feature, $args);
-        } else {
-            add_theme_support($args);
-        }
-    }
-}
-add_action('after_setup_theme', 'liukin_setup');
-
-/**
- * Gestión de assets (CSS y JavaScript)
- */
-function liukin_agregar_css_js() {
-    $cache_buster = WP_DEBUG ? time() : wp_get_theme()->get('Version');
-    
-    // Desregistrar el estilo actual
-    wp_deregister_style('style');
-    
-    // CSS principal con versión basada en última modificación
-    $css_path = get_stylesheet_uri();
-    $css_version = filemtime(get_stylesheet_directory() . '/style.css');
-    wp_enqueue_style('liukin-style', $css_path, [], $css_version);
-
-    // Configuración de scripts
-    $scripts = [
-        'infinite-scroll' => [
-            'path' => '/js/infinite-scroll.js',
-            'deps' => ['jquery'],
-            'condition' => true
-        ],
-        'lightbox' => [
-            'path' => '/js/lightbox.js',
-            'deps' => [],
-            'condition' => is_single()
-        ]
-    ];
-
-    // Cargar scripts según condiciones
-    foreach ($scripts as $handle => $script) {
-        if ($script['condition']) {
-            wp_enqueue_script(
-                "liukin-{$handle}",
-                get_template_directory_uri() . $script['path'],
-                $script['deps'],
-                $cache_buster,
-                true
-            );
-        }
-    }
-
-    // Agregar atributo defer a los scripts
-    add_filter('script_loader_tag', function($tag, $handle) {
-        if (strpos($handle, 'liukin-') !== false) {
-            return str_replace(' src', ' defer src', $tag);
-        }
-        return $tag;
-    }, 10, 2);
-
-    // Configuración JS centralizada
-    $js_config = [
-        'ajaxurl' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('liukin_infinite_scroll'),
-        'i18n' => [
-            'loading' => __('Cargando...', 'liukin'),
-            'no_more' => __('No hay más entradas', 'liukin')
-        ]
-    ];
-
-    // Agregar datos específicos según el contexto
-    if (is_archive()) {
-        $term = get_queried_object();
-        if ($term instanceof WP_Term) {
-            $js_config['term'] = [
-                'id' => $term->term_id,
-                'taxonomy' => $term->taxonomy
-            ];
-        }
-    } elseif (is_search()) {
-        $js_config['search'] = get_search_query();
-    }
-
-    wp_localize_script('liukin-infinite-scroll', 'liukinConfig', $js_config);
-}
-add_action('wp_enqueue_scripts', 'liukin_agregar_css_js');
-
-/**
- * Optimización de imágenes y accesibilidad
- */
-function add_alt_tags($content) {
-    if (empty($content)) {
-        return $content;
-    }
-
-    $dom = new DOMDocument();
-    libxml_use_internal_errors(true);
-    $dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-    libxml_clear_errors();
-
-    $images = $dom->getElementsByTagName('img');
-    foreach ($images as $img) {
-        if (!$img->hasAttribute('alt')) {
-            $img->setAttribute('alt', get_the_title());
-        }
-    }
-
-    return $dom->saveHTML();
-}
-add_filter('the_content', 'add_alt_tags', 99999);
-
-/**
- * Optimización del buffer de salida
- */
-function output_callback($buffer) {
-    return preg_replace('/\s+type=[\'"]text\/(javascript|css)[\'"]/', '', $buffer);
-}
-
-function manage_output_buffer() {
-    ob_start('output_callback');
-}
-add_action('wp_loaded', 'manage_output_buffer');
-
-/**
- * Desactivar funcionalidades no necesarias
- */
-function disable_unused_features() {
-    // Desactivar emojis
-    remove_action('wp_head', 'print_emoji_detection_script', 7);
-    remove_action('wp_print_styles', 'print_emoji_styles');
-    
-    // Desactivar el editor de bloques
-    add_filter('use_block_editor_for_post', '__return_false', 10);
-    
-    // Desactivar CSS de Gutenberg
-    wp_dequeue_style('wp-block-library');
-}
-add_action('init', 'disable_unused_features');
-
-/**
- * Gestión de comentarios
- */
-function disable_comments_completely() {
-    add_filter('comments_open', '__return_false', 20, 2);
-    add_filter('pings_open', '__return_false', 20, 2);
-    add_filter('comments_array', '__return_array', 10, 2);
-}
-add_action('init', 'disable_comments_completely');
-
-/**
- * Optimización de incrustaciones de YouTube
- */
-function optimize_youtube_embed($html, $url, $attr, $post_id) {
-    if (strpos($url, 'youtube.com') !== false) {
-        $privacy_args = [
-            'rel' => 0,
-            'modestbranding' => 1,
-            'iv_load_policy' => 3
-        ];
-        
-        $nocookie_url = str_replace('youtube.com', 'youtube-nocookie.com', $url);
-        $nocookie_url = add_query_arg($privacy_args, $nocookie_url);
-        
-        return str_replace($url, $nocookie_url, $html);
-    }
-    return $html;
-}
-add_filter('embed_oembed_html', 'optimize_youtube_embed', 10, 4);
-add_filter('embed_handler_html', 'optimize_youtube_embed', 10, 4);
-
-/**
- * Gestión de cookies
- */
-function disable_cookies_for_guests() {
-    if (is_user_logged_in() || is_admin()) {
-        return;
-    }
-
-    if (session_status() === PHP_SESSION_ACTIVE) {
-        session_unset();
-        session_destroy();
-        if (isset($_COOKIE[session_name()])) {
-            setcookie(session_name(), '', time() - 3600, '/');
-        }
-    }
-    
-    if (!empty($_COOKIE)) {
-        $past = time() - 3600;
-        foreach ($_COOKIE as $key => $value) {
-            setcookie($key, '', $past, '/', '', true, true);
-        }
-    }
-    
-    $_COOKIE = [];
-    if (isset($_SESSION)) {
-        $_SESSION = [];
-    }
-}
-add_action('init', 'disable_cookies_for_guests', 1);
-add_filter('comment_cookie_lifetime', '__return_zero');
-
-/**
- * Carga infinita de posts vía AJAX
- */
-function liukin_load_more_posts() {
-    if (!check_ajax_referer('liukin_infinite_scroll', 'nonce', false)) {
-        wp_send_json_error('Invalid nonce');
-    }
-    
-    $page = filter_input(INPUT_POST, 'page', FILTER_VALIDATE_INT) ?: 1;
-    
-    $query = new WP_Query([
-        'post_type' => 'post',
-        'posts_per_page' => get_option('posts_per_page'),
-        'paged' => $page,
-        'post_status' => 'publish',
-        'no_found_rows' => true,
-        'update_post_meta_cache' => false,
-        'update_post_term_cache' => true
-    ]);
-    
-    ob_start();
-    if ($query->have_posts()) {
-        while ($query->have_posts()) {
-            $query->the_post();
-            get_template_part('template-parts/content', 'card');
-        }
-    }
-    $html = ob_get_clean();
-    wp_reset_postdata();
-    
-    wp_send_json_success(['html' => $html]);
-}
-add_action('wp_ajax_liukin_load_more_posts', 'liukin_load_more_posts');
-add_action('wp_ajax_nopriv_liukin_load_more_posts', 'liukin_load_more_posts');
-
-/**
- * Modificar el orden de posts en las páginas de etiquetas
- */
-function modify_tag_query($query) {
-    if ($query->is_tag() && $query->is_main_query()) {
-        $query->set('orderby', 'date');
-        $query->set('order', 'ASC');
-    }
-}
-add_action('pre_get_posts', 'modify_tag_query');
+ /**
+  * Configura el logo personalizado del tema.
+  * 
+  * Establece las dimensiones predeterminadas y opciones para el logo del sitio.
+  */
+ function themename_custom_logo_setup() {
+     $defaults = array(
+         'height'      => 55,
+         'width'       => 55,
+         'flex-height' => true,
+         'flex-width'  => true,
+         'header-text' => array( 'site-title', 'site-description' ),
+         'unlink-homepage-logo' => true, 
+     );
+     add_theme_support( 'custom-logo', $defaults );
+ }
+ add_action( 'after_setup_theme', 'themename_custom_logo_setup' );
+ 
+ /**
+  * Encola hojas de estilo y scripts.
+  * 
+  * Registra y carga los estilos CSS y archivos JavaScript necesarios para el tema,
+  * y configura los parámetros para el scroll infinito y lightbox.
+  */
+ function liukin_agregar_css_js() {
+     // Desregistrar el estilo actual
+     wp_deregister_style('style');
+ 
+     // Obtener la ruta del CSS
+     $css_path = get_stylesheet_uri();
+     $css_version = filemtime(get_stylesheet_directory() . '/style.css');
+     wp_enqueue_style('liukin-style', $css_path, array(), $css_version);
+ 
+     // Agregar JavaScript para scroll infinito
+     wp_enqueue_script('liukin-infinite-scroll', get_template_directory_uri() . '/js/infinite-scroll.js', array(), '1.0', true);
+ 
+     // Agregar JavaScript para lightbox solo en single.php
+     if (is_single()) {
+         wp_enqueue_script('liukin-lightbox', get_template_directory_uri() . '/js/lightbox.js', array(), '1.0', true);
+     }
+ 
+     // Agregar atributo defer al script
+     add_filter('script_loader_tag', function($tag, $handle) {
+         if ('liukin-infinite-scroll' === $handle || 'liukin-lightbox' === $handle) {
+             return str_replace(' src', ' defer src', $tag);
+         }
+         return $tag;
+     }, 10, 2);
+ 
+     // Preparar variables para JavaScript
+     $js_vars = array(
+         'ajaxurl' => admin_url('admin-ajax.php'),
+         'nonce' => wp_create_nonce('liukin_infinite_scroll'),
+         'loading' => __('Cargando...', 'liukin'),
+         'no_more' => __('No hay más entradas', 'liukin')
+     );
+ 
+     // Agregar variables específicas según el tipo de página
+     if (is_archive()) {
+         $term = get_queried_object();
+         if ($term instanceof WP_Term) {
+             $js_vars['termId'] = $term->term_id;
+             $js_vars['taxonomy'] = $term->taxonomy;
+         }
+     } elseif (is_search()) {
+         $js_vars['searchQuery'] = get_search_query();
+     }
+ 
+     // Pasar variables a JavaScript
+     wp_add_inline_script('liukin-infinite-scroll', 'window.liukinInfinite = ' . json_encode($js_vars) . ';', 'before');
+ }
+ add_action('wp_enqueue_scripts', 'liukin_agregar_css_js');
+ 
+ 
+ // Soporte para miniaturas de publicaciones
+ /**
+  * Configura el soporte del tema para miniaturas de publicaciones y la etiqueta del título.
+  */
+ function liukin_setup() {
+     if ( function_exists('add_theme_support') ) {
+         add_theme_support('post-thumbnails');
+     }
+     add_theme_support( 'title-tag' );
+ }
+ add_action( 'after_setup_theme', 'liukin_setup' );
+ // Forzar atributo alt en imágenes
+ /**
+  * Asegura que todas las imágenes tengan atributos alt.
+  *
+  * @param string $content El contenido de la publicación.
+  * @return string Contenido de la publicación modificado.
+  */
+ function add_alt_tags($content) {
+     global $post;
+     preg_match_all('/<img (.*?)\/>/', $content, $images);
+     if (!is_null($images)) {
+         foreach ($images[1] as $index => $value) {
+             if (!preg_match('/alt=/', $value)) {
+                 $new_img = str_replace('<img', '<img alt="'.$post->post_title.'"', $images[0][$index]);
+                 $content = str_replace($images[0][$index], $new_img, $content);
+             }
+         }
+     }
+     return $content;
+ }
+ add_filter('the_content', 'add_alt_tags', 99999);
+ 
+ // Eliminar el atributo type de las etiquetas de script y estilo
+ /**
+  * Inicia el almacenamiento en búfer de salida.
+  * 
+  * Comienza a capturar la salida HTML para poder modificarla antes de enviarla al navegador.
+  */
+ add_action('wp_loaded', 'output_buffer_start');
+ function output_buffer_start() { 
+     ob_start("output_callback"); 
+ }
+ 
+ /**
+  * Finaliza el almacenamiento en búfer de salida.
+  * 
+  * Asegura que el búfer se limpie correctamente al finalizar la ejecución.
+  */
+ add_action('shutdown', 'output_buffer_end');
+ function output_buffer_end() { 
+     if (ob_get_length() > 0) { ob_end_clean(); }
+ }
+ 
+ /**
+  * Función de devolución de llamada para modificar la salida almacenada en búfer.
+  *
+  * @param string $buffer La salida almacenada en búfer.
+  * @return string Salida modificada.
+  */
+ function output_callback($buffer) {
+     return preg_replace( "%[ ]type=[\'\"]text\/(javascript|css)[\'\"]%", '', $buffer );
+ }
+ 
+ /**
+  * Desactivar la carga del JS de los emojis de Wordpress
+  * 
+  * Mejora el rendimiento eliminando scripts y estilos relacionados con emojis.
+  */
+ add_action('init', 'disable_emojis');
+ function disable_emojis() {
+     remove_action('wp_head', 'print_emoji_detection_script', 7);
+     remove_action('wp_print_styles', 'print_emoji_styles');
+ }
+ 
+ // Forzar el uso del editor clásico
+ add_filter('use_block_editor_for_post', '__return_false', 10);
+ 
+ /**
+  * Desactiva la carga del CSS que necesita Gutenberg
+  * 
+  * Mejora el rendimiento eliminando hojas de estilo innecesarias del editor de bloques.
+  */
+ function remove_block_library_css() {
+     wp_dequeue_style('wp-block-library');
+ }
+ add_action('wp_enqueue_scripts', 'remove_block_library_css', 100);
+ 
+ /**
+  * Deshabilita los comentarios en las publicaciones y páginas
+  * 
+  * @return bool Siempre devuelve false para cerrar los comentarios
+  */
+ function disable_comments_status() {
+     return false;
+ }
+ add_filter('comments_open', 'disable_comments_status', 20, 2);
+ add_filter('pings_open', 'disable_comments_status', 20, 2);
+ 
+ /**
+  * Oculta los comentarios existentes en el frontend
+  * 
+  * @param array $comments Lista de comentarios a mostrar
+  * @return array Array vacío para no mostrar comentarios
+  */
+ function disable_comments_hide_existing_comments($comments) {
+     return array();
+ }
+ add_filter('comments_array', 'disable_comments_hide_existing_comments', 10, 2);
+ 
+ /**
+  * Reemplaza el dominio de YouTube por youtube-nocookie.com
+  * 
+  * Mejora la privacidad del usuario al utilizar la versión sin cookies de YouTube
+  * y añade parámetros para reducir el rastreo.
+  * 
+  * @param string $html El HTML del embed
+  * @param string $url La URL original
+  * @param array $attr Atributos del embed
+  * @param int $post_id ID de la publicación
+  * @return string HTML modificado con URL mejorada para privacidad
+  */
+ function replace_youtube_embed_url($html, $url, $attr, $post_id) {
+     if (strpos($url, 'youtube.com') !== false) {
+         // Reemplazar el dominio de YouTube por youtube-nocookie.com
+         $nocookie_url = str_replace('youtube.com', 'youtube-nocookie.com', $url);
+         // Agregar parámetros adicionales para mejorar la privacidad
+         $nocookie_url = add_query_arg(array(
+             'rel' => 0,   // No mostrar videos relacionados al final
+             'modestbranding' => 1,  // Minimizar el branding de YouTube
+             'iv_load_policy' => 3   // Deshabilitar las anotaciones
+         ), $nocookie_url);
+         // Reemplazar la URL en el HTML incrustado
+         $html = str_replace($url, $nocookie_url, $html);
+     }
+     return $html;
+ }
+ add_filter('embed_oembed_html', 'replace_youtube_embed_url', 10, 4);
+ add_filter('embed_handler_html', 'replace_youtube_embed_url', 10, 4);
+ 
+ /**
+  * Deshabilita el uso de cookies en WordPress para usuarios no autenticados
+  * 
+  * Mejora la privacidad al eliminar todas las cookies para visitantes no registrados,
+  * eliminando el seguimiento innecesario.
+  */
+ add_action('init', 'disable_cookies_for_guests', 1);
+ function disable_cookies_for_guests() {
+     if (!is_user_logged_in()) {
+         // Deshabilitar sesiones de PHP
+         if (session_id()) {
+             session_unset();
+             session_destroy();
+             setcookie(session_name(), '', time() - 42000, '/');
+         }
+ 
+         // Eliminar cualquier cookie que ya se haya establecido
+         foreach ($_COOKIE as $cookie_name => $cookie_value) {
+             setcookie($cookie_name, '', time() - 3600, '/');
+         }
+ 
+         // Deshabilitar la configuración de cookies
+         $_COOKIE = array();
+         $_SESSION = array();
+     }
+ }
+ 
+ // Deshabilitar el uso de cookies para comentarios
+ add_filter('comment_cookie_lifetime', '__return_zero');
+ 
+ /**
+  * Maneja la carga de posts adicionales mediante AJAX
+  * 
+  * Implementa la funcionalidad de scroll infinito, cargando más publicaciones
+  * cuando el usuario llega al final de la página.
+  */
+ function liukin_load_more_posts() {
+     check_ajax_referer('liukin_infinite_scroll', 'nonce');
+ 
+     $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
+ 
+     $args = array(
+         'post_type' => 'post',
+         'posts_per_page' => get_option('posts_per_page'),
+         'paged' => $page,
+         'post_status' => 'publish'
+     );
+ 
+     $query = new WP_Query($args);
+ 
+     if ($query->have_posts()) {
+         while ($query->have_posts()) {
+             $query->the_post();
+             $categories = get_the_category();
+             ?>
+             <div class="card-body phome">
+                 <?php 
+                 if (!empty($categories)) {
+                     foreach ($categories as $cat) {
+                         printf(
+                             '<a href="%s" class="cathome %s" title="Ver todos los post de %s">%s</a> ',
+                             esc_url(get_category_link($cat->term_id)),
+                             esc_attr($cat->slug),
+                             esc_attr($cat->name),
+                             esc_html($cat->name)
+                         );
+                     }
+                 }
+                 ?>
+                 <a href="<?php the_permalink(); ?>">
+                     <h2 class="entry-title"><?php the_title(); ?></h2>
+                 </a>
+             </div>
+             <?php
+         }
+     }
+     wp_reset_postdata();
+     die();
+ }
+ add_action('wp_ajax_liukin_load_more_posts', 'liukin_load_more_posts');
+ add_action('wp_ajax_nopriv_liukin_load_more_posts', 'liukin_load_more_posts');
+ 
+ /**
+  * Modifica el orden de posts en las páginas de etiquetas
+  * 
+  * Establece el criterio de ordenación para las páginas de etiquetas,
+  * mostrando las publicaciones más recientes primero.
+  * 
+  * @param WP_Query $query Objeto de consulta de WordPress
+  */
+ function modify_tag_query($query) {
+     if ($query->is_tag() && $query->is_main_query()) {
+         $query->set('orderby', 'date');
+         $query->set('order', 'ASC'); // ASC para orden ascendente (más antiguos primero)
+     }
+ }
+ add_action('pre_get_posts', 'modify_tag_query');
+ 
+ /**
+  * Registra scripts adicionales para el tema
+  * 
+  * Añade scripts personalizados utilizados por el tema.
+  */
+ function theme_enqueue_scripts() {
+     wp_enqueue_script('theme-toggle', get_template_directory_uri() . '/js/theme-toggle.js', array(), '1.0.0', true);
+ }
+ add_action('wp_enqueue_scripts', 'theme_enqueue_scripts');
+ ?>

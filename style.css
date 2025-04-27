@@ -3,6 +3,10 @@
   --primary-color: #008ec2;
   --text-color: #222;
   --bg-color: #fdfdfd;
+  --footer-bg: #1d2327;
+  --footer-text: #f5f5f5;
+  --footer-link: #cccccc;
+  --footer-link-hover: #ffffff;
   --font-family: "Open Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 }
 .search-web{
@@ -621,4 +625,91 @@ p img {
     right: -1em;
     bottom: -1em;
     z-index: -1;
+}
+
+/* Estilos del Footer */
+.site-footer {
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+  font-size: 0.9rem;
+  padding-top: 2rem;
+}
+
+.site-footer h4 {
+  color: var(--footer-text);
+  font-size: 1.2rem;
+  margin-bottom: 1.2rem;
+  position: relative;
+  font-weight: 500;
+}
+
+.site-footer h4::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 2px;
+  background-color: var(--primary-color);
+  margin-top: 0.5rem;
+}
+
+.footer-info {
+  margin-bottom: 1.5rem;
+}
+
+.footer-info p {
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+.footer-links ul,
+.footer-categories ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li,
+.footer-categories li {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-links a,
+.footer-categories a {
+  color: var(--footer-link);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover,
+.footer-categories a:hover {
+  color: var(--footer-link-hover);
+  text-decoration: none;
+}
+
+.copyright {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 1.2rem 0;
+  margin-top: 2rem;
+  font-size: 0.85rem;
+}
+
+.copyright p {
+  margin: 0;
+  opacity: 0.7;
+}
+
+/* Responsive del footer */
+@media (max-width: 768px) {
+  .site-footer {
+    text-align: center;
+  }
+
+  .site-footer h4::after {
+    margin: 0.5rem auto 0;
+  }
+
+  .footer-info, .footer-links, .footer-categories {
+    margin-bottom: 2rem;
+  }
 }

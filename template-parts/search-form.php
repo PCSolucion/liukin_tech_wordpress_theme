@@ -11,7 +11,7 @@
         <div class="search-wrapper">
             <div class="logo-container">
                 <a href="<?php echo esc_url(home_url('/')); ?>" class="logow">
-                    <img src="https://pc-solucion.es/wp-content/uploads/2025/03/favicon.png" width="55" height="122" alt="<?php echo get_bloginfo('name'); ?>">
+                    <img src="https://pc-solucion.es/wp-content/uploads/2025/02/cropped-cropped-cropped-favicon.png" width="55" height="122" alt="<?php echo get_bloginfo('name'); ?>">
                 </a>
             </div>
             <div class="search-container-wrapper">
@@ -32,13 +32,6 @@
                         </button>
                     </div>
                 </form>
-                <div class="theme-toggle-wrapper">
-                    <label class="switch" for="theme-toggle">
-						
-                        <input type="checkbox" id="theme-toggle">
-                        <span class="slider"></span>
-                    </label>
-                </div>
             </div>
         </div>
     </div>
