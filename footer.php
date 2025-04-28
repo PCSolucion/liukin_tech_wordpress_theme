@@ -12,34 +12,39 @@
                 <!-- Columna de enlaces útiles -->
                 <div class="footer-links">
                     <h4>Enlaces útiles</h4>
-                    <ul>
-                        <li><a href="<?php echo esc_url(home_url('/')); ?>">Inicio</a></li>
-                        <li><a href="<?php echo esc_url(home_url('/contacto')); ?>">Contacto</a></li>
-                        <li><a href="<?php echo esc_url(home_url('/politica-de-privacidad')); ?>">Política de privacidad</a></li>
-                        <li><a href="<?php echo esc_url(home_url('/aviso-legal')); ?>">Aviso legal</a></li>
-                    </ul>
+                    <nav aria-label="Enlaces útiles">
+                        <ul>
+                            <li><a href="<?php echo esc_url(home_url('/')); ?>" aria-label="Ir a la página de inicio">Inicio</a></li>
+                            <li><a href="<?php echo esc_url(home_url('/contacto')); ?>" aria-label="Ir a la página de contacto">Contacto</a></li>
+                            <li><a href="<?php echo esc_url(home_url('/politica-de-privacidad')); ?>" aria-label="Ver política de privacidad">Política de privacidad</a></li>
+                            <li><a href="<?php echo esc_url(home_url('/aviso-legal')); ?>" aria-label="Ver aviso legal">Aviso legal</a></li>
+                        </ul>
+                    </nav>
                 </div>
                 
                 <!-- Columna de categorías -->
                 <div class="footer-categories">
                     <h4>Categorías</h4>
-                    <ul>
-                        <?php
-                        $categories = get_categories(array(
-                            'orderby' => 'count',
-                            'order' => 'DESC',
-                            'number' => 5
-                        ));
-                        
-                        foreach ($categories as $category) {
-                            printf(
-                                '<li><a href="%s">%s</a></li>',
-                                esc_url(get_category_link($category->term_id)),
-                                esc_html($category->name)
-                            );
-                        }
-                        ?>
-                    </ul>
+                    <nav aria-label="Categorías principales">
+                        <ul>
+                            <?php
+                            $categories = get_categories(array(
+                                'orderby' => 'count',
+                                'order' => 'DESC',
+                                'number' => 5
+                            ));
+                            
+                            foreach ($categories as $category) {
+                                printf(
+                                    '<li><a href="%s" aria-label="Ver categoría %s">%s</a></li>',
+                                    esc_url(get_category_link($category->term_id)),
+                                    esc_html($category->name),
+                                    esc_html($category->name)
+                                );
+                            }
+                            ?>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>

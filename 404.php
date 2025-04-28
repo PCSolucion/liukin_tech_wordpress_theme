@@ -34,7 +34,7 @@
                     <div class="error-resources">
                         <div class="resource-section">
                             <h3>Categorías populares</h3>
-                            <div class="category-buttons">
+                            <div class="category-buttons" role="navigation" aria-label="Categorías populares">
                                 <?php
                                 $categories = get_categories(array(
                                     'orderby' => 'count',
@@ -44,9 +44,10 @@
                                 
                                 foreach ($categories as $category) {
                                     printf(
-                                        '<a href="%s" class="category-button %s">%s</a>',
+                                        '<a href="%s" class="category-button %s" role="button" aria-label="Ver categoría %s">%s</a>',
                                         esc_url(get_category_link($category->term_id)),
                                         esc_attr($category->slug),
+                                        esc_html($category->name),
                                         esc_html($category->name)
                                     );
                                 }
