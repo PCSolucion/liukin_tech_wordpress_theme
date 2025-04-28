@@ -17,7 +17,7 @@
                         
                         <div class="suggestion-item">
                             <span class="suggestion-icon">🏠</span>
-                            <a href="<?php echo esc_url(home_url('/')); ?>">Volver a la página de inicio</a>
+                            <a href="<?php echo esc_url(home_url('/')); ?>" tabindex="0">Volver a la página de inicio</a>
                         </div>
                         
                         <div class="suggestion-item">
@@ -42,12 +42,15 @@
                                     'number' => 5
                                 ));
                                 
+                                $tabIndex = 0;
                                 foreach ($categories as $category) {
+                                    $tabIndex++;
                                     printf(
-                                        '<a href="%s" class="category-button %s" role="button" aria-label="Ver categoría %s">%s</a>',
+                                        '<a href="%s" class="category-button %s" role="button" aria-label="Ver categoría %s" tabindex="0" data-focus-index="%d">%s</a>',
                                         esc_url(get_category_link($category->term_id)),
                                         esc_attr($category->slug),
                                         esc_html($category->name),
+                                        $tabIndex,
                                         esc_html($category->name)
                                     );
                                 }
@@ -68,7 +71,7 @@
                                 foreach ($popular_posts as $post) {
                                     setup_postdata($post);
                                     ?>
-                                    <a href="<?php the_permalink(); ?>" class="article-link">
+                                    <a href="<?php the_permalink(); ?>" class="article-link" tabindex="0">
                                         <span class="article-title"><?php the_title(); ?></span>
                                         <span class="article-arrow">→</span>
                                     </a>
@@ -278,5 +281,34 @@
     }
 }
 </style>
+
+<script>
+// Script para mejorar la navegación por teclado en categorías
+document.addEventListener('DOMContentLoaded', function() {
+    // Mejorar navegación de categorías con teclado
+    var categoryButtons = document.querySelectorAll('.category-button');
+    
+    categoryButtons.forEach(function(button) {
+        // Permitir activación con tecla Enter o Espacio
+        button.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                window.location.href = this.getAttribute('href');
+            }
+        });
+    });
+    
+    // Navegación entre botones con flechas
+    var articleLinks = document.querySelectorAll('.article-link');
+    articleLinks.forEach(function(link) {
+        link.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                window.location.href = this.getAttribute('href');
+            }
+        });
+    });
+});
+</script>
 
 <?php get_footer(); ?>

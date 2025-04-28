@@ -857,6 +857,58 @@ p img {
   text-decoration: none;
 }
 
+/* Focus visible para mejorar la navegación por teclado - Solo aparece al navegar con teclado */
+:focus:not(:focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid #0070aa !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 2px rgba(0, 112, 170, 0.25) !important;
+  transition: outline 0.2s ease !important;
+  z-index: 9 !important;
+}
+
+/* Mantener el foco visible incluso cuando el elemento tenga otros estados */
+a:focus-visible:hover,
+button:focus-visible:hover {
+  outline: 3px solid #0070aa !important;
+}
+
+/* Estilos específicos para foco en formularios */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  border-color: #0070aa !important;
+}
+
+/* Estilos para foco en elementos de navegación */
+.category-button:focus-visible,
+.footer-links a:focus-visible,
+.footer-categories a:focus-visible {
+  outline-color: #ffffff !important;
+  outline-offset: 3px !important;
+}
+
+/* Estilo para elementos sin borde visible que necesitan indicador de foco */
+.lightbox-close:focus-visible {
+  box-shadow: 0 0 0 3px #ffffff, 0 0 0 5px #0070aa !important;
+  outline: none !important;
+}
+
+/* Polyfill para navegadores antiguos */
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
 /* Utilidades de accesibilidad */
 .screen-reader-text {
   border: 0;
@@ -871,10 +923,10 @@ p img {
   word-wrap: normal !important;
 }
 
-.screen-reader-text:focus {
+.screen-reader-text:focus-visible {
   background-color: #f7f7f7;
   border-radius: 3px;
-  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6) !important;
   clip: auto !important;
   clip-path: none;
   color: #333;

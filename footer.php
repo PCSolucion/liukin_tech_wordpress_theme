@@ -64,5 +64,51 @@
     <!--Footer-->
     <!-- Optional JavaScript -->
     <?php wp_footer();?>
+    
+    <!-- Polyfill para focus-visible en navegadores antiguos -->
+    <script>
+    (function() {
+        // Solo aplicar el polyfill si el navegador no soporta :focus-visible
+        if (!CSS.supports('selector(:focus-visible)')) {
+            document.documentElement.classList.add('js-focus-visible');
+            
+            // Detectar cuando se usa el ratón vs. teclado
+            var usingMouse = false;
+            
+            // Función para marcar un elemento como focus-visible
+            function applyFocusVisibleClass(e) {
+                if (e.target) {
+                    if (!usingMouse) {
+                        e.target.classList.add('focus-visible');
+                    }
+                }
+            }
+            
+            // Función para eliminar la clase focus-visible
+            function removeFocusVisibleClass(e) {
+                if (e.target) {
+                    e.target.classList.remove('focus-visible');
+                }
+            }
+            
+            // Detectar uso de ratón
+            document.addEventListener('mousedown', function() {
+                usingMouse = true;
+                setTimeout(function() {
+                    usingMouse = false;
+                }, 100);
+            }, true);
+            
+            // Detectar uso de teclado
+            document.addEventListener('keydown', function() {
+                usingMouse = false;
+            }, true);
+            
+            // Aplicar clase a elementos con foco
+            document.addEventListener('focus', applyFocusVisibleClass, true);
+            document.addEventListener('blur', removeFocusVisibleClass, true);
+        }
+    })();
+    </script>
 </body>
 </html>
