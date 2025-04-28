@@ -13,19 +13,67 @@
             <div class="lightbox-content" role="document">
                 <button class="lightbox-close" aria-label="Cerrar imagen" title="Cerrar">&times;</button>
                 <img src="" alt="Imagen ampliada" role="img">
+                <div class="lightbox-caption" role="status" aria-live="polite"></div>
             </div>
         `;
+        
+        // Añadir estilos específicos para mejorar contraste
+        var styleElement = document.createElement('style');
+        styleElement.textContent = `
+            .lightbox {
+                background-color: rgba(0, 0, 0, 0.92) !important; /* Fondo más oscuro para mejor contraste */
+            }
+            .lightbox-close {
+                background-color: rgba(0, 0, 0, 0.6) !important;
+                color: white !important;
+                font-size: 40px !important;
+                border-radius: 50% !important;
+                width: 50px !important;
+                height: 50px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            .lightbox-close:hover, .lightbox-close:focus {
+                background-color: rgba(0, 0, 0, 0.8) !important;
+                color: white !important;
+                box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5) !important;
+            }
+            .lightbox-caption {
+                color: white !important;
+                background-color: rgba(0, 0, 0, 0.7) !important;
+                padding: 10px !important;
+                margin-top: 10px !important;
+                border-radius: 4px !important;
+                font-weight: 500 !important;
+            }
+        `;
+        document.head.appendChild(styleElement);
+        
         document.body.appendChild(lightbox);
 
         // Obtener referencias a los elementos
         var lightboxImg = lightbox.querySelector('img');
         var closeBtn = lightbox.querySelector('.lightbox-close');
         var lightboxContent = lightbox.querySelector('.lightbox-content');
+        var lightboxCaption = lightbox.querySelector('.lightbox-caption');
 
         // Función para abrir el lightbox
         function openLightbox(img) {
             lightboxImg.src = img.src;
             lightboxImg.alt = img.alt || 'Imagen ampliada';
+            
+            // Mostrar título/leyenda de la imagen si existe
+            if (img.alt && img.alt !== 'Imagen ampliada') {
+                lightboxCaption.textContent = img.alt;
+                lightboxCaption.style.display = 'block';
+            } else if (img.getAttribute('data-caption')) {
+                lightboxCaption.textContent = img.getAttribute('data-caption');
+                lightboxCaption.style.display = 'block';
+            } else {
+                lightboxCaption.style.display = 'none';
+            }
+            
             lightbox.style.display = 'block';
             lightbox.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';

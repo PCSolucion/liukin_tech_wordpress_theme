@@ -70,19 +70,33 @@
                     if (xhr.responseText) {
                         container.insertAdjacentHTML('beforeend', xhr.responseText);
                     } else {
-                        loader.innerHTML = '<p>' + window.liukinInfinite.no_more + '</p>';
+                        // Mensaje mejorado de "no hay más entradas" con mejor contraste
+                        loader.innerHTML = '<p class="loader-message no-more-message" style="color: #333; font-weight: 600; animation: none; border-color: #d66a00;">' + window.liukinInfinite.no_more + '</p>';
+                        loader.style.background = '#f5f5f5';
+                        loader.style.borderRadius = '8px';
+                        loader.style.padding = '15px';
+                        loader.style.margin = '30px 0';
+                        loader.style.borderLeft = '4px solid #d66a00';
                     }
                 }
                 loading = false;
                 isProcessingQueue = false;
-                loader.style.display = 'none';
+                loader.style.display = 'block'; // Mantener visible para mostrar mensajes
                 processQueue();
             };
 
             xhr.onerror = function() {
+                // Mensaje de error con buen contraste
+                loader.innerHTML = '<p class="loader-message error-message" style="color: #721c24; font-weight: 600; animation: none;">Error al cargar contenido. Intente nuevamente.</p>';
+                loader.style.background = '#f8d7da';
+                loader.style.borderRadius = '8px';
+                loader.style.padding = '15px';
+                loader.style.margin = '30px 0';
+                loader.style.borderLeft = '4px solid #721c24';
+                
                 loading = false;
                 isProcessingQueue = false;
-                loader.style.display = 'none';
+                loader.style.display = 'block'; // Mantener visible para mostrar el error
                 processQueue();
             };
 

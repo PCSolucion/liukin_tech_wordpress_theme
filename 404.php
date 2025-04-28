@@ -104,7 +104,7 @@
 .error-page-header h1 {
     font-size: 72px;
     font-weight: 700;
-    color: #008ec2;
+    color: #0070aa;
     margin: 0 0 10px;
     letter-spacing: -0.02em;
 }
@@ -119,7 +119,7 @@
 
 .error-page-header p {
     font-size: 18px;
-    color: #555;
+    color: #444;
     max-width: 600px;
     margin-inline: auto;
     line-height: 1.6;
@@ -138,7 +138,7 @@
     color: #333;
     margin-block: 0 25px;
     padding-block-end: 15px;
-    border-block-end: 2px solid #008ec2;
+    border-block-end: 2px solid #0070aa;
 }
 
 .suggestion-item {
@@ -158,19 +158,19 @@
 .suggestion-item a, 
 .suggestion-item span:not(.suggestion-icon) {
     font-size: 16px;
-    color: #444;
+    color: #333;
     line-height: 1.5;
     text-decoration: none;
 }
 
 .suggestion-item a {
-    color: #0077a3;
-    font-weight: 500;
+    color: #005b8c;
+    font-weight: 600;
     transition: color 0.2s ease;
 }
 
 .suggestion-item a:hover {
-    color: #008ec2;
+    color: #0070aa;
     text-decoration: underline;
 }
 
@@ -184,32 +184,33 @@
     color: #333;
     margin-block: 0 20px;
     padding-block-end: 10px;
-    border-block-end: 2px solid #008ec2;
+    border-block-end: 2px solid #0070aa;
 }
 
 .category-button {
     display: inline-block;
     padding-block: 8px;
     padding-inline: 16px;
-    background-color: #008ec2;
+    background-color: #0070aa;
     color: white;
     border-radius: 50px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     text-decoration: none;
     transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .category-button:hover {
-    background-color: #0077a3;
+    background-color: #005b8c;
     transform: translateY(-2px);
     color: white;
+    text-decoration: none;
 }
 
-.category-button.linux { background-color: #7c30d9; }
-.category-button.programacion { background-color: #008080; }
-.category-button.gameplays { background-color: #0077a3; }
-.category-button.videojuegos { background-color: #ff7f00; }
+.category-button.linux { background-color: #6020c0; }
+.category-button.programacion { background-color: #006666; }
+.category-button.gameplays { background-color: #005b8c; }
+.category-button.videojuegos { background-color: #d66a00; }
 .category-button.uncategorized { background-color: #151319; }
 
 .popular-articles {
@@ -233,6 +234,7 @@
 .article-link:hover {
     background-color: #f0f0f0;
     transform: translateX(5px);
+    text-decoration: none;
 }
 
 .article-title {
@@ -243,8 +245,8 @@
 
 .article-arrow {
     font-size: 18px;
-    color: #008ec2;
-    opacity: 0.7;
+    color: #0070aa;
+    opacity: 0.9;
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
 

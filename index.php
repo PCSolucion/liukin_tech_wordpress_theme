@@ -48,8 +48,8 @@ $query = new WP_Query($args);
             <?php endif; ?>
         </div>
         
-        <div id="infinite-loader" style="display: none; text-align: center; width: 100%; padding: 20px;">
-            <p><?php _e('Cargando...', 'liukin'); ?></p>
+        <div id="infinite-loader" style="display: none; text-align: center; width: 100%; padding: 20px;" aria-live="polite" role="status">
+            <p class="loader-message"><?php _e('Cargando...', 'liukin'); ?></p>
         </div>
         
         <?php if ($query->max_num_pages > 1) : ?>
@@ -60,5 +60,34 @@ $query = new WP_Query($args);
         <?php endif; ?>
     </div>
 </div>
+
+<style>
+/* Estilos para mensajes de carga infinita con mejor contraste */
+#infinite-loader {
+    margin: 30px 0;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    border-left: 4px solid #0070aa;
+}
+
+.loader-message {
+    color: #333;
+    font-weight: 600;
+    font-size: 16px;
+    margin: 0;
+}
+
+/* Estilo de animación para el mensaje de carga */
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+#infinite-loader p {
+    animation: pulse 1.5s infinite ease-in-out;
+}
+</style>
 
 <?php get_footer(); ?>

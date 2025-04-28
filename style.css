@@ -1,14 +1,14 @@
 /* Variables y configuración base */
 :root {
   /* Colores principales */
-  --primary-color: #008ec2;
-  --primary-dark: #0077a3;
-  --primary-light: rgba(0, 142, 194, 0.1);
+  --primary-color: #0070aa;
+  --primary-dark: #005b8c;
+  --primary-light: rgba(0, 112, 170, 0.1);
   
   /* Colores de texto */
   --text-color: #222;
-  --text-light: #555;
-  --text-muted: #64748b;
+  --text-light: #444;
+  --text-muted: #555;
   
   /* Colores de fondo */
   --bg-color: #fdfdfd;
@@ -18,15 +18,15 @@
   
   /* Colores del footer */
   --footer-bg: #1d2327;
-  --footer-text: #f5f5f5;
-  --footer-link: #cccccc;
+  --footer-text: #ffffff;
+  --footer-link: #e0e0e0;
   --footer-link-hover: #ffffff;
   
   /* Colores de categorías */
-  --cat-linux: #7c30d9;
-  --cat-programacion: #008080;
-  --cat-gameplays: #0077a3;
-  --cat-videojuegos: #ff7f00;
+  --cat-linux: #6020c0;
+  --cat-programacion: #006666;
+  --cat-gameplays: #005b8c;
+  --cat-videojuegos: #d66a00;
   --cat-uncategorized: #151319;
   
   /* Tipografía */
@@ -102,14 +102,14 @@ body {
 
 /* Enlaces */
 a {
-  color: var(--primary-color);
+  color: #0070aa;
   text-decoration: none;
   background-color: transparent;
 }
 
 a:hover {
-  color: var(--primary-dark);
-  text-decoration: none;
+  color: #005b8c;
+  text-decoration: underline;
 }
 
 /* Grid System */
@@ -276,6 +276,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 .cathome:hover{
 	color: var(--bg-card);
+  text-decoration: none;
 }
 .phome h2{
 	margin-top: 10px;
@@ -747,12 +748,13 @@ p img {
   color: var(--footer-link);
   text-decoration: none;
   transition: color var(--transition-base);
+  font-weight: 500;
 }
 
 .footer-links a:hover,
 .footer-categories a:hover {
   color: var(--footer-link-hover);
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 .copyright {
@@ -840,10 +842,10 @@ p img {
   padding-block: 8px;
   padding-inline: 16px;
   background-color: var(--primary-color);
-  color: var(--bg-card);
+  color: #ffffff;
   border-radius: var(--border-radius-pill);
   font-size: var(--font-size-category);
-  font-weight: 500;
+  font-weight: 700;
   text-decoration: none;
   transition: background-color var(--transition-fast), transform var(--transition-fast);
 }
@@ -851,7 +853,8 @@ p img {
 .category-button:hover {
   background-color: var(--primary-dark);
   transform: translateY(-2px);
-  color: var(--bg-card);
+  color: #ffffff;
+  text-decoration: none;
 }
 
 /* Utilidades de accesibilidad */
