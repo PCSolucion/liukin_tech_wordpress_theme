@@ -942,3 +942,318 @@ textarea:focus-visible {
   width: auto;
   z-index: 100000;
 }
+
+/* WCAG 2.1 AA - Estilos de accesibilidad */
+
+/* Mejora de enfoque de teclado - Skip links */
+.skip-link {
+  position: absolute;
+  top: -50px;
+  left: 10px;
+  padding: 10px 15px;
+  background-color: #0070aa;
+  color: #ffffff;
+  font-weight: bold;
+  z-index: 1001;
+  border-radius: 0 0 4px 4px;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus-visible {
+  top: 0;
+  outline: 3px solid #ffffff !important;
+}
+
+/* Mejora de contraste para textos pequeños - Cumplir con ratio 4.5:1 para AA */
+.post-meta,
+.footer-info p,
+.copyright p,
+.search-input::placeholder {
+  color: #444 !important; /* Asegurar ratio de contraste adecuado */
+}
+
+/* Mejoras para acomodación de zoom (WCAG 1.4.4) */
+html {
+  font-size: 100%; /* Permitir zoom basado en texto */
+}
+
+@media (max-width: 991px) {
+  body {
+    word-wrap: break-word; /* Evitar desbordamiento horizontal al hacer zoom */
+  }
+}
+
+/* Espaciado de texto (WCAG 1.4.12) */
+.entry-content p,
+.entry-summary p {
+  line-height: 1.5 !important;
+  letter-spacing: normal !important;
+  word-spacing: normal !important;
+}
+
+/* Orientación de contenido (WCAG 1.3.4) */
+@media screen and (orientation: portrait) {
+  .containerd {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1.6 !important;
+  }
+}
+
+/* Funcionalidad con teclado mejorada (WCAG 2.1.1) */
+.entry-title a,
+.category-button,
+.search-submit,
+.footer-links a,
+.footer-categories a {
+  transition: outline-offset 0.2s ease, outline 0.2s ease, background-color 0.2s ease !important;
+}
+
+/* Indicadores de foco mejorados (WCAG 2.4.7) */
+:focus:not(:focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid #0070aa !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 2px rgba(0, 112, 170, 0.25) !important;
+  transition: outline 0.2s ease !important;
+  z-index: 9 !important;
+}
+
+/* Mantener el foco visible incluso cuando el elemento tenga otros estados */
+a:focus-visible:hover,
+button:focus-visible:hover {
+  outline: 3px solid #0070aa !important;
+}
+
+/* Estilos específicos para foco en formularios */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  border-color: #0070aa !important;
+}
+
+/* Estilos para foco en elementos de navegación */
+.category-button:focus-visible,
+.footer-links a:focus-visible,
+.footer-categories a:focus-visible {
+  outline-color: #ffffff !important;
+  outline-offset: 3px !important;
+}
+
+/* Estilo para elementos sin borde visible que necesitan indicador de foco */
+.lightbox-close:focus-visible {
+  box-shadow: 0 0 0 3px #ffffff, 0 0 0 5px #0070aa !important;
+  outline: none !important;
+}
+
+/* Polyfill para navegadores antiguos */
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Utilidades de accesibilidad */
+.screen-reader-text {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  word-wrap: normal !important;
+}
+
+.screen-reader-text:focus-visible {
+  background-color: #f7f7f7;
+  border-radius: 3px;
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6) !important;
+  clip: auto !important;
+  clip-path: none;
+  color: #333;
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  height: auto;
+  left: 5px;
+  line-height: normal;
+  padding: 15px 23px 14px;
+  text-decoration: none;
+  top: 5px;
+  width: auto;
+  z-index: 100000;
+}
+
+/* Información de accesibilidad para widgets y regiones */
+[aria-live] {
+  z-index: 1; /* Garantizar que los anuncios no sean bloqueados */
+}
+
+/* Mejor espaciado para elementos interactivos en dispositivos móviles y táctiles (WCAG 2.5.5) */
+@media (max-width: 768px) {
+  .category-button,
+  .search-submit,
+  .footer-links a,
+  .footer-categories a,
+  .page-numbers {
+    min-height: 44px !important; /* Tamaño mínimo para áreas táctiles */
+    padding: 10px 15px !important;
+  }
+  
+  .search-submit {
+    width: 44px !important;
+    height: 44px !important;
+  }
+}
+
+/* Estilos para mensajes de carga infinita */
+#infinite-loader {
+  margin: 30px 0;
+  padding: 15px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  border-left: 4px solid #0070aa;
+  text-align: center;
+  width: 100%;
+}
+
+.loader-message {
+  color: #333;
+  font-weight: 600;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Estilo de animación para el mensaje de carga */
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+#infinite-loader p {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Estilos para la meta información de los posts */
+.post-meta {
+  margin-top: 8px;
+  font-size: 0.85em;
+  color: #444;
+}
+
+/* Estilos para mensaje de no resultados de búsqueda */
+.no-results-container {
+  padding: 30px;
+  margin: 40px 0;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  border-left: 5px solid #0070aa;
+}
+
+.no-results-message {
+  text-align: center;
+}
+
+.no-results-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.no-results-message h2 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.no-results-message p {
+  color: #444;
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.no-results-suggestions {
+  text-align: left;
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.no-results-suggestions h3 {
+  color: #333;
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.no-results-suggestions ul {
+  padding-left: 20px;
+}
+
+.no-results-suggestions li {
+  color: #444;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+/* Estilos para paginación accesible */
+.navigation.pagination {
+  margin: 30px 0;
+  text-align: center;
+}
+
+.navigation.pagination .nav-links {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+}
+
+.page-numbers {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 10px;
+  background-color: #f5f5f5;
+  color: #333;
+  border-radius: 4px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.page-numbers.current {
+  background-color: #0070aa;
+  color: #ffffff;
+}
+
+.page-numbers:hover,
+.page-numbers:focus {
+  background-color: #e0e0e0;
+  color: #111;
+  text-decoration: none;
+}
+
+.page-numbers.current:hover,
+.page-numbers.current:focus {
+  background-color: #0070aa;
+  color: #ffffff;
+}

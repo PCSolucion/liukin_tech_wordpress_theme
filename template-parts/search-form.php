@@ -30,12 +30,18 @@
                                tabindex="0"
                                required>
                         <button type="submit" class="search-submit" aria-label="Buscar" tabindex="0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" role="img">
+                                <title>Icono de búsqueda</title>
+                                <desc>Una lupa que representa la acción de búsqueda</desc>
                                 <circle cx="11" cy="11" r="8"></circle>
                                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                             </svg>
                             <span class="screen-reader-text">Buscar</span>
                         </button>
+                    </div>
+                    
+                    <div class="search-instructions screen-reader-text" aria-live="polite">
+                        Ingresa términos de búsqueda y presiona Enter o el botón Buscar
                     </div>
                 </form>
             </div>
@@ -52,6 +58,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if ((e.altKey && e.key === 's') || (e.ctrlKey && e.key === '/')) {
             e.preventDefault();
             document.getElementById('search-input').focus();
+            
+            // Anunciar para lectores de pantalla
+            var announcement = document.createElement('div');
+            announcement.setAttribute('aria-live', 'assertive');
+            announcement.className = 'screen-reader-text';
+            announcement.textContent = 'Campo de búsqueda activado';
+            document.body.appendChild(announcement);
+            
+            // Eliminar anuncio después de que se haya leído
+            setTimeout(function() {
+                document.body.removeChild(announcement);
+            }, 1000);
         }
     });
     
@@ -61,5 +79,18 @@ document.addEventListener('DOMContentLoaded', function() {
     srInfo.setAttribute('aria-live', 'polite');
     srInfo.textContent = 'Puedes usar Alt+S o Control+Barra para acceder rápidamente al buscador.';
     document.body.appendChild(srInfo);
+    
+    // Manejar envío del formulario con indicación para lectores de pantalla
+    var searchForm = document.querySelector('.search-form');
+    var searchInput = document.getElementById('search-input');
+    
+    searchForm.addEventListener('submit', function() {
+        // Anunciar búsqueda para lectores de pantalla
+        var announcement = document.createElement('div');
+        announcement.setAttribute('aria-live', 'assertive');
+        announcement.className = 'screen-reader-text';
+        announcement.textContent = 'Buscando: ' + searchInput.value;
+        document.body.appendChild(announcement);
+    });
 });
 </script>

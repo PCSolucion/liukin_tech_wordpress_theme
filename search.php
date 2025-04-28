@@ -1,97 +1,69 @@
 <?php get_header();?>
 <?php get_template_part('template-parts/search-form', 'search-form');?>
+
+<main id="main-content" role="main">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
-                <div class="card-body phome">
-                    <a href="<?php the_permalink();?>">
-                        <h2 class="entry-title"><?php the_title();?></h2>
-                    </a>
-                    <?php the_excerpt();?>
-                </div>
-                <?php endwhile;?>
+                <header class="search-header">
+                    <h1 class="search-title screen-reader-text">
+                        <?php 
+                        printf(
+                            esc_html__('Resultados de búsqueda para: %s', 'liukin'), 
+                            '<span class="search-term">' . get_search_query() . '</span>'
+                        ); 
+                        ?>
+                    </h1>
+                </header>
+                
+                <?php if ( have_posts() ) : ?>
+                    <div class="search-results" role="region" aria-label="Resultados de búsqueda">
+                        <?php while ( have_posts() ) : the_post(); ?>
+                            <article class="card-body phome" aria-labelledby="search-result-<?php the_ID(); ?>">
+                                <a href="<?php the_permalink();?>" aria-labelledby="search-result-<?php the_ID(); ?>">
+                                    <h2 id="search-result-<?php the_ID(); ?>" class="entry-title"><?php the_title();?></h2>
+                                </a>
+                                <div class="entry-summary">
+                                    <?php the_excerpt();?>
+                                </div>
+                                <div class="post-meta">
+                                    <span class="sr-date screen-reader-text">Publicado el: <?php echo get_the_date(); ?></span>
+                                </div>
+                            </article>
+                        <?php endwhile;?>
+                    </div>
+                    
+                    <?php
+                    // Añadir paginación accesible si es necesario
+                    the_posts_pagination(array(
+                        'mid_size' => 2,
+                        'prev_text' => '<span aria-hidden="true">&laquo;</span><span class="screen-reader-text">Anterior</span>',
+                        'next_text' => '<span class="screen-reader-text">Siguiente</span><span aria-hidden="true">&raquo;</span>',
+                        'aria-label' => 'Paginación de resultados de búsqueda'
+                    ));
+                    ?>
+                    
                 <?php else: ?>
-                <div class="no-results-container">
-                    <div class="no-results-message">
-                        <span class="no-results-icon">🔍</span>
-                        <h2>No se encontraron resultados</h2>
-                        <p>No se ha encontrado nada relacionado con tu búsqueda "<strong><?php echo get_search_query(); ?></strong>". Prueba con diferentes palabras clave o explora nuestras categorías.</p>
-                        
-                        <div class="no-results-suggestions">
-                            <h3>Sugerencias:</h3>
-                            <ul>
-                                <li>Revisa que las palabras estén escritas correctamente</li>
-                                <li>Prueba con términos más generales</li>
-                                <li>Utiliza palabras clave diferentes</li>
-                            </ul>
+                    <div class="no-results-container" role="alert" aria-live="polite">
+                        <div class="no-results-message">
+                            <span class="no-results-icon" aria-hidden="true">🔍</span>
+                            <h2>No se encontraron resultados</h2>
+                            <p>No se ha encontrado nada relacionado con tu búsqueda "<strong><?php echo get_search_query(); ?></strong>". Prueba con diferentes palabras clave o explora nuestras categorías.</p>
+                            
+                            <div class="no-results-suggestions">
+                                <h3>Sugerencias:</h3>
+                                <ul>
+                                    <li>Revisa que las palabras estén escritas correctamente</li>
+                                    <li>Prueba con términos más generales</li>
+                                    <li>Utiliza palabras clave diferentes</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
-			    <?php endif;?>
+                <?php endif;?>
             </div>
         </div>
     </div>
-    
-<style>
-/* Estilos para mensaje de no resultados con mejor contraste */
-.no-results-container {
-    padding: 30px;
-    margin: 40px 0;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    border-left: 5px solid #0070aa;
-}
-
-.no-results-message {
-    text-align: center;
-}
-
-.no-results-icon {
-    font-size: 48px;
-    display: block;
-    margin-bottom: 20px;
-}
-
-.no-results-message h2 {
-    color: #333;
-    font-size: 24px;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.no-results-message p {
-    color: #444;
-    font-size: 16px;
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-.no-results-suggestions {
-    text-align: left;
-    max-width: 500px;
-    margin: 0 auto;
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-}
-
-.no-results-suggestions h3 {
-    color: #333;
-    font-size: 18px;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.no-results-suggestions ul {
-    padding-left: 20px;
-}
-
-.no-results-suggestions li {
-    color: #444;
-    margin-bottom: 8px;
-    line-height: 1.4;
-}
-</style>
+</main>
     
 <?php get_footer();?>
