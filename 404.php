@@ -88,15 +88,16 @@
 /* Estilos para la página 404 */
 .error-page-wrapper {
     max-width: 900px;
-    margin: 40px auto 80px;
+    margin-block: 40px 80px;
+    margin-inline: auto;
     font-family: var(--font-family);
 }
 
 .error-page-header {
     text-align: center;
-    margin-bottom: 40px;
-    padding-bottom: 30px;
-    border-bottom: 1px solid #eaeaea;
+    margin-block-end: 40px;
+    padding-block-end: 30px;
+    border-block-end: 1px solid #eaeaea;
 }
 
 .error-page-header h1 {
@@ -111,7 +112,7 @@
     font-size: 28px;
     font-weight: 600;
     color: #222;
-    margin: 0 0 20px;
+    margin-block: 0 20px;
     border: none;
 }
 
@@ -119,19 +120,11 @@
     font-size: 18px;
     color: #555;
     max-width: 600px;
-    margin: 0 auto;
+    margin-inline: auto;
     line-height: 1.6;
 }
 
-.error-page-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 40px;
-}
-
 .error-suggestions {
-    flex: 1;
-    min-width: 300px;
     background-color: #f9f9f9;
     border-radius: 12px;
     padding: 30px;
@@ -142,20 +135,21 @@
     font-size: 22px;
     font-weight: 600;
     color: #333;
-    margin: 0 0 25px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #008ec2;
+    margin-block: 0 25px;
+    padding-block-end: 15px;
+    border-block-end: 2px solid #008ec2;
 }
 
 .suggestion-item {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 15px;
     align-items: center;
-    margin-bottom: 20px;
+    margin-block-end: 20px;
 }
 
 .suggestion-icon {
     font-size: 20px;
-    margin-right: 15px;
     min-width: 24px;
     text-align: center;
 }
@@ -179,34 +173,23 @@
     text-decoration: underline;
 }
 
-.error-resources {
-    flex: 1;
-    min-width: 300px;
-}
-
 .resource-section {
-    margin-bottom: 40px;
+    margin-block-end: 40px;
 }
 
 .resource-section h3 {
     font-size: 22px;
     font-weight: 600;
     color: #333;
-    margin: 0 0 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #008ec2;
-}
-
-.category-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 15px;
+    margin-block: 0 20px;
+    padding-block-end: 10px;
+    border-block-end: 2px solid #008ec2;
 }
 
 .category-button {
     display: inline-block;
-    padding: 8px 16px;
+    padding-block: 8px;
+    padding-inline: 16px;
     background-color: #008ec2;
     color: white;
     border-radius: 50px;
@@ -229,14 +212,14 @@
 .category-button.uncategorized { background-color: #151319; }
 
 .popular-articles {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 15px;
 }
 
 .article-link {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto;
     align-items: center;
     padding: 12px 18px;
     background-color: #f9f9f9;
@@ -284,12 +267,7 @@
     }
     
     .error-page-content {
-        flex-direction: column;
-    }
-    
-    .error-suggestions, 
-    .error-resources {
-        width: 100%;
+        grid-template-columns: 1fr;
     }
     
     .category-buttons {
