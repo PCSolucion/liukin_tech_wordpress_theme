@@ -5,6 +5,38 @@
     <br/>
     <h1 class="titlecat"><?php echo single_term_title(); ?></h1>
     <p class="descat"><?php echo term_description(); ?></p>
+    <?php 
+    // Comprobar si estamos en la categoría con slug "builds"
+    if (is_category('builds')) {
+        echo '<div class="alert alert-info" role="alert">Selecciona un filtro para encontrar la build que necesitas</div>';
+        
+        // Añadir imágenes con enlaces a subcategorías
+        echo '<div class="subcategory-images">';
+        
+        // Imagen 1 - Tank
+        echo '<div class="subcategory-item">';
+        echo '<a href="https://pc-solucion.es/rol/builds/tank/" title="Tank">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746788379/tank5_we9zzm.png" alt="Tank" class="subcategory-image">';
+        echo '</a>';
+        echo '</div>';
+        
+        // Imagen 2 - Healer (actualizada)
+        echo '<div class="subcategory-item">';
+        echo '<a href="https://pc-solucion.es/rol/builds/healer/" title="Healer">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746788528/healer5_ues0su.png" alt="Healer" class="subcategory-image">';
+        echo '</a>';
+        echo '</div>';
+        
+        // Imagen 3 - DPS
+        echo '<div class="subcategory-item">';
+        echo '<a href="https://pc-solucion.es/rol/builds/dps/" title="DPS">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746788472/dps5_ewferb.png" alt="DPS" class="subcategory-image">';
+        echo '</a>';
+        echo '</div>';
+        
+        echo '</div>';
+    }
+    ?>
         <div class="row">
     <?php $i = 1; while(have_posts()) : the_post();?>
         <div class="col-lg-4">

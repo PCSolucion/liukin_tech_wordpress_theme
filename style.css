@@ -130,12 +130,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to right,
-                var(--header-bg-edge) 0%,
-                var(--header-bg-dark) 25%,
-                var(--header-bg-accent) 50%,
-                var(--header-bg-dark) 75%,
-                var(--header-bg-edge) 100%);
+    background: var(--header-bg-dark);
     z-index: 1;
 }
 
@@ -851,11 +846,7 @@ p img {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, 
-    rgba(30, 36, 50, 0.8), 
-    rgba(40, 40, 50, 0.9), 
-    rgba(30, 36, 50, 0.8));
-  background-size: 200% 100%;
+  background: rgba(30, 36, 50, 0.9);
   border-radius: 10px;
   z-index: 0;
   opacity: 0.8;
@@ -873,10 +864,7 @@ p img {
 }
 
 .search-container:focus-within::before {
-  background: linear-gradient(90deg, 
-    rgba(30, 36, 50, 0.9), 
-    rgba(45, 65, 85, 0.9), 
-    rgba(30, 36, 50, 0.9));
+  background: rgba(35, 40, 55, 0.95);
 }
 
 .search-submit {
@@ -1690,4 +1678,73 @@ textarea:focus-visible {
 .page-numbers.current:focus {
   background-color: #0070aa;
   color: #ffffff;
+}
+
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-md);
+}
+
+.alert-info {
+  color: #0070aa;
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+  border-left: 4px solid #0070aa;
+  font-weight: var(--font-weight-medium);
+  margin-top: -42px;
+}
+
+/* Estilos para subcategorías de builds */
+.subcategory-images {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.subcategory-item {
+  width: 140px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.subcategory-item:hover {
+  transform: translateY(-5px);
+}
+
+.subcategory-image {
+  width: 100%;
+  height: auto;
+  border-radius: var(--border-radius-md);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease;
+}
+
+.subcategory-item:hover .subcategory-image {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.subcategory-title {
+  display: block;
+  margin-top: 10px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--primary-color);
+  font-size: var(--font-size-lg);
+}
+
+/* Responsive para subcategorías */
+@media (max-width: 768px) {
+  .subcategory-images {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .subcategory-item {
+    width: 100%;
+    max-width: 140px;
+    margin-bottom: 15px;
+  }
 }
