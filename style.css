@@ -1748,3 +1748,76 @@ textarea:focus-visible {
     margin-bottom: 15px;
   }
 }
+
+.weapons-section {
+    margin-top: 2rem;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.weapons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(45px, 1fr));
+    gap: 1rem;
+    justify-items: center;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.weapon-item {
+    transition: transform 0.2s ease;
+}
+
+.weapon-item:hover {
+    transform: scale(1.1);
+}
+
+.weapon-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+    box-shadow: 0 0 8px rgba(147, 51, 234, 0.5);
+    border-radius: 8px;
+    padding: 2px;
+    background: rgba(147, 51, 234, 0.1);
+}
+
+.weapon-item a {
+    display: block;
+    text-decoration: none;
+}
+
+.weapon-item a:hover .weapon-icon {
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+    box-shadow: 0 0 12px rgba(147, 51, 234, 0.7);
+}
+
+.role-count {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
+    background: rgba(147, 51, 234, 0.2);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.subcategory-item {
+    width: 140px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.subcategory-item:hover {
+    transform: translateY(-5px);
+}
+
+.subcategory-item:hover .role-count {
+    background: rgba(147, 51, 234, 0.3);
+}

@@ -18,13 +18,25 @@
         echo '<a href="https://pc-solucion.es/rol/builds/tank/" title="Tank">';
         echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746788379/tank5_we9zzm.png" alt="Tank" class="subcategory-image">';
         echo '</a>';
+        $tank_count = get_posts(array(
+            'category_name' => 'tank',
+            'posts_per_page' => -1,
+            'post_status' => 'publish'
+        ));
+        echo '<div class="role-count">' . count($tank_count) . ' builds</div>';
         echo '</div>';
         
-        // Imagen 2 - Healer (actualizada)
+        // Imagen 2 - Healer
         echo '<div class="subcategory-item">';
         echo '<a href="https://pc-solucion.es/rol/builds/healer/" title="Healer">';
         echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746788528/healer5_ues0su.png" alt="Healer" class="subcategory-image">';
         echo '</a>';
+        $healer_count = get_posts(array(
+            'category_name' => 'healer',
+            'posts_per_page' => -1,
+            'post_status' => 'publish'
+        ));
+        echo '<div class="role-count">' . count($healer_count) . ' builds</div>';
         echo '</div>';
         
         // Imagen 3 - DPS
@@ -32,9 +44,127 @@
         echo '<a href="https://pc-solucion.es/rol/builds/dps/" title="DPS">';
         echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746788472/dps5_ewferb.png" alt="DPS" class="subcategory-image">';
         echo '</a>';
+        $dps_count = get_posts(array(
+            'category_name' => 'dps',
+            'posts_per_page' => -1,
+            'post_status' => 'publish'
+        ));
+        echo '<div class="role-count">' . count($dps_count) . ' builds</div>';
         echo '</div>';
         
         echo '</div>';
+        
+        // Añadir sección de armas
+        echo '<div class="weapons-section">';
+        echo '<div class="weapons-grid">';
+        
+        // Mangual
+        echo '<div class="weapon-item">';
+        echo '<a href="#" title="Mangual">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746789072/latigo_wzv45l.png" alt="Mangual" class="weapon-icon">';
+        echo '</a>';
+        echo '</div>';
+        
+        // Espadón
+        echo '<div class="weapon-item">';
+        echo '<a href="#" title="Espadón">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746879077/serenidad_qoxzez.png" alt="Espadón" class="weapon-icon">';
+        echo '</a>';
+        echo '</div>';
+        
+        // Espada
+        echo '<div class="weapon-item">';
+        echo '<a href="#" title="Espada">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746789067/espadaescudo_ntg78c.png" alt="Espada" class="weapon-icon">';
+        echo '</a>';
+        echo '</div>';
+        
+        // Estoque
+        echo '<div class="weapon-item">';
+        echo '<a href="#" title="Estoque">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746789149/rapier_i1icgl.webp" alt="Estoque" class="weapon-icon">';
+        echo '</a>';
+        echo '</div>';
+        
+        // Báculo de fuego
+        echo '<div class="weapon-item">';
+        echo '<a href="#" title="Báculo de fuego">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746789068/firestaff_mjvj7w.png" alt="Báculo de fuego" class="weapon-icon">';
+        echo '</a>';
+        echo '</div>';
+        
+        // Báculo de vida
+        echo '<div class="weapon-item">';
+        echo '<a href="#" title="Báculo de vida">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746879096/baculo_de_vida_progenitor_pvfzzj.webp" alt="Báculo de vida" class="weapon-icon">';
+        echo '</a>';
+        echo '</div>';
+        
+        // Arco
+        echo '<div class="weapon-item">';
+        echo '<a href="https://pc-solucion.es/t/arco/" title="Arco">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746789066/arco2_gfza10.png" alt="Arco" class="weapon-icon">';
+        echo '</a>';
+        echo '</div>';
+        
+        // Martillo
+        echo '<div class="weapon-item">';
+        echo '<a href="#" title="Martillo">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746789149/martillodeguerra_katfte.png" alt="Martillo" class="weapon-icon">';
+        echo '</a>';
+        echo '</div>';
+        
+        // Mosquete
+        echo '<div class="weapon-item">';
+        echo '<a href="#" title="Mosquete">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746789149/mosquete2_uuvqiy.png" alt="Mosquete" class="weapon-icon">';
+        echo '</a>';
+        echo '</div>';
+        
+        // Hachuela
+        echo '<div class="weapon-item">';
+        echo '<a href="#" title="Hachuela">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746789070/hatchet_dlslsr.webp" alt="Hachuela" class="weapon-icon">';
+        echo '</a>';
+        echo '</div>';
+        
+        // Trabuco
+        echo '<div class="weapon-item">';
+        echo '<a href="#" title="Trabuco">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746879119/bluder_tgrmqt.webp" alt="Trabuco" class="weapon-icon">';
+        echo '</a>';
+        echo '</div>';
+        
+        // Gran Hacha
+        echo '<div class="weapon-item">';
+        echo '<a href="#" title="Gran Hacha">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746789070/gran_hacha_fodiyg.webp" alt="Gran Hacha" class="weapon-icon">';
+        echo '</a>';
+        echo '</div>';
+        
+        // Manopla de hielo
+        echo '<div class="weapon-item">';
+        echo '<a href="#" title="Manopla de hielo">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746879151/guantedehielo_u43hdy.png" alt="Manopla de hielo" class="weapon-icon">';
+        echo '</a>';
+        echo '</div>';
+        
+        // Manopla de vacío
+        echo '<div class="weapon-item">';
+        echo '<a href="#" title="Manopla de vacío">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746879170/void_uzngfx.webp" alt="Manopla de vacío" class="weapon-icon">';
+        echo '</a>';
+        echo '</div>';
+        
+        // Lanza
+        echo '<div class="weapon-item">';
+        echo '<a href="#" title="Lanza">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746789071/lanza2_ojc6vy.png" alt="Lanza" class="weapon-icon">';
+        echo '</a>';
+        echo '</div>';
+        
+        echo '</div>'; // Cierre de weapons-grid
+        echo '</div>'; // Cierre de weapons-section
     }
     ?>
         <div class="row">
