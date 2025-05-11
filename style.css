@@ -1751,73 +1751,446 @@ textarea:focus-visible {
 
 .weapons-section {
     margin-top: 2rem;
-    padding: 1rem;
+    padding: 1.5rem;
     border-radius: 8px;
-}
-
-.weapons-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(45px, 1fr));
-    gap: 1rem;
-    justify-items: center;
-    align-items: center;
     max-width: 1200px;
     margin: 0 auto;
 }
 
-.weapon-item {
-    transition: transform 0.2s ease;
+.weapons-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
 }
 
-.weapon-item:hover {
-    transform: scale(1.1);
+.weapons-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 1rem;
 }
 
-.weapon-icon {
-    width: 40px;
-    height: 40px;
-    object-fit: contain;
-    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
-    box-shadow: 0 0 8px rgba(147, 51, 234, 0.5);
-    border-radius: 8px;
-    padding: 2px;
-    background: rgba(147, 51, 234, 0.1);
-}
-
-.weapon-item a {
-    display: block;
-    text-decoration: none;
-}
-
-.weapon-item a:hover .weapon-icon {
-    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
-    box-shadow: 0 0 12px rgba(147, 51, 234, 0.7);
-}
-
-.role-count {
-    margin-top: 8px;
-    font-size: 14px;
-    color: #fff;
-    text-align: center;
-    background: rgba(147, 51, 234, 0.2);
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-weight: 500;
-}
-
-.subcategory-item {
-    width: 140px;
-    text-align: center;
-    transition: transform 0.3s ease;
+.weapon-card {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 0.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    text-align: center;
+    width: 100%;
 }
 
-.subcategory-item:hover {
-    transform: translateY(-5px);
+.weapon-card:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-.subcategory-item:hover .role-count {
-    background: rgba(147, 51, 234, 0.3);
+.weapon-icon {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.weapon-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.3));
+    transition: transform 0.3s ease;
+}
+
+.weapon-card:hover .weapon-icon img {
+    transform: scale(1.1);
+}
+
+.weapon-name {
+    color: #ffffff;
+    font-size: 0.75rem;
+    margin-top: 0.3rem;
+    width: 100%;
+    line-height: 1.2;
+}
+
+.weapon-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+/* Ajustes responsive */
+@media (max-width: 768px) {
+    .weapons-row {
+        flex-wrap: wrap;
+        gap: 0.8rem;
+    }
+    
+    .weapon-card {
+        flex-basis: calc(25% - 0.6rem);
+        min-width: 0;
+    }
+    
+    .weapon-icon {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .weapons-row {
+        gap: 0.6rem;
+    }
+    
+    .weapon-card {
+        padding: 0.5rem;
+    }
+    
+    .weapon-icon {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .weapon-name {
+        font-size: 0.7rem;
+    }
+}
+
+/* Estilos para la página de builds */
+.builds-category-wrapper {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    margin: 1rem 0;
+}
+
+.builds-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.builds-title {
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.builds-description {
+    color: #b3b3b3;
+    font-size: 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.section-title {
+    color: #ffffff;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    position: relative;
+    padding-bottom: 0.8rem;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, #ff4d4d, #ff8533);
+    border-radius: 2px;
+}
+
+/* Estilos para la sección de roles */
+.roles-section {
+    margin-bottom: 2rem;
+}
+
+.roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    padding: 0.5rem;
+}
+
+.role-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.role-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #ff4d4d, #ff8533);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.role-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.role-card:hover::before {
+    opacity: 1;
+}
+
+.role-icon {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 1rem;
+    position: relative;
+}
+
+.role-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
+}
+
+.role-card:hover .role-icon img {
+    transform: scale(1.1);
+}
+
+.role-info h3 {
+    color: #ffffff;
+    font-size: 1.2rem;
+    margin-bottom: 0.3rem;
+}
+
+.build-count {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    margin-top: 0.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(5px);
+}
+
+.build-count::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 0.4rem;
+    background: #ffffff;
+    animation: pulse 1.5s infinite;
+}
+
+/* Colores específicos para cada contador de rol */
+.role-card.tank .build-count {
+  background: linear-gradient(135deg, rgb(39 57 114 / 52%) 0%, rgba(31, 37, 55, 0.1) 100%);
+    border: 1px solid rgba(47, 56, 83, 0.35);
+}
+
+.role-card.tank .build-count::before {
+  background: #1f3fa0;
+}
+
+.role-card.healer .build-count {
+  background: linear-gradient(135deg, rgb(73 101 24 / 34%) 0%, rgba(38, 44, 27, 0.1) 100%);
+    border: 1px solid rgba(54, 63, 38, 0.35);
+}
+
+.role-card.healer .build-count::before {
+  background: #50740f;
+}
+
+.role-card.dps .build-count {
+  background: linear-gradient(135deg, rgb(89 46 47 / 84%) 0%, rgba(64, 33, 34, 0.1) 100%);
+    border: 1px solid rgba(89, 46, 47, 0.35);
+}
+
+.role-card.dps .build-count::before {
+  background: #88292c;
+}
+
+.role-card:hover .build-count {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.role-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+/* Media queries para los contadores */
+@media (max-width: 768px) {
+    .build-count {
+        padding: 0.25rem 0.7rem;
+        font-size: 0.75rem;
+    }
+    
+    .build-count::before {
+        width: 5px;
+        height: 5px;
+        margin-right: 0.3rem;
+    }
+}
+
+/* Estilos específicos para la categoría builds */
+body.category-builds {
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+    color: #ffffff;
+}
+
+body.category-builds .container {
+    background: transparent;
+}
+
+body.category-builds .phome {
+    background: rgba(25, 25, 30, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+body.category-builds .phome::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #1f2537, rgba(31, 37, 55, 0.3));
+    transition: all 0.3s ease;
+}
+
+/* Estilo específico para builds de Tank */
+body.category-builds .phome.role-tank::before {
+    background: linear-gradient(90deg, #1f2537, rgba(31, 37, 55, 0.3));
+}
+
+body.category-builds .phome.role-tank {
+    border-left: 2px solid rgba(31, 37, 55, 0.8);
+}
+
+body.category-builds .phome.role-tank:hover::before {
+    background: linear-gradient(90deg, #1f2537, rgba(31, 37, 55, 0.5));
+    height: 4px;
+}
+
+/* Estilo específico para builds de Healer */
+body.category-builds .phome.role-healer::before {
+    background: linear-gradient(90deg, #262c1b, rgba(38, 44, 27, 0.3));
+}
+
+body.category-builds .phome.role-healer {
+    border-left: 2px solid rgba(38, 44, 27, 0.8);
+}
+
+body.category-builds .phome.role-healer:hover::before {
+    background: linear-gradient(90deg, #262c1b, rgba(38, 44, 27, 0.5));
+    height: 4px;
+}
+
+/* Estilo específico para builds de DPS */
+body.category-builds .phome.role-dps::before {
+    background: linear-gradient(90deg, #402122, rgba(64, 33, 34, 0.3));
+}
+
+body.category-builds .phome.role-dps {
+    border-left: 2px solid rgba(64, 33, 34, 0.8);
+}
+
+body.category-builds .phome.role-dps:hover::before {
+    background: linear-gradient(90deg, #402122, rgba(64, 33, 34, 0.5));
+    height: 4px;
+}
+
+body.category-builds .phome:hover {
+    transform: translateY(-3px);
+    background: rgba(35, 35, 40, 0.25);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+body.category-builds .phome h2 a {
+    color: rgba(255, 255, 255, 0.9);
+    transition: color 0.3s ease;
+}
+
+body.category-builds .phome h2 a:hover {
+    color: #ff8533;
+}
+
+body.category-builds .card-body {
+    background: transparent;
+}
+
+body.category-builds .featured-archive {
+    border: none;
+}
+
+body.category-builds .featured-archive img {
+    border-radius: 6px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+body.category-builds .featured-archive:hover img {
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+body.category-builds .pagination .page-numbers {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.category-builds .pagination .page-numbers:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ff8533;
 }
