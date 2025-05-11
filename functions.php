@@ -320,4 +320,64 @@
      wp_enqueue_script('theme-toggle', get_template_directory_uri() . '/js/theme-toggle.js', array(), '1.0.0', true);
  }
  add_action('wp_enqueue_scripts', 'theme_enqueue_scripts');
- ?>
+ 
+ /**
+  * Muestra iconos de armas basados en las etiquetas del post
+  *
+  * Verifica si un post tiene etiquetas relacionadas con armas y
+  * muestra los iconos correspondientes.
+  */
+ function liukin_display_weapon_icons() {
+     // Verificar si el post tiene etiquetas de armas
+     $post_tags = get_the_tags();
+     if (!$post_tags) {
+         return;
+     }
+     
+     echo '<span class="weapon-icons">';
+     
+     // Array de armas disponibles con sus iconos
+     $weapons = array(
+         'arco' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789066/arco2_gfza10.png',
+         'estoque' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789149/rapier_i1icgl.webp',
+         'mangual' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789072/latigo_wzv45l.png',
+         'espadon' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746879077/serenidad_qoxzez.png',
+         'espada' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789067/espadaescudo_ntg78c.png',
+         'baculodefuego' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789068/firestaff_mjvj7w.png',
+         'baculodevida' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746879096/baculo_de_vida_progenitor_pvfzzj.webp',
+         'martillo' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789149/martillodeguerra_katfte.png',
+         'mosquete' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789149/mosquete2_uuvqiy.png',
+         'hachuela' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789070/hatchet_dlslsr.webp',
+         'trabuco' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746879119/bluder_tgrmqt.webp',
+         'gran-hacha' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789070/gran_hacha_fodiyg.webp',
+         'manopladehielo' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746879151/guantedehielo_u43hdy.png',
+         'manopladevacio' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746879170/void_uzngfx.webp',
+         'lanza' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789071/lanza2_ojc6vy.png',
+         'hacha-doble' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789068/firestaff_mjvj7w.png'
+     );
+     
+     // Normalizar nombres de armas para coincidir con etiquetas
+     $normalized_weapons = array();
+     foreach ($weapons as $weapon => $icon) {
+         $normalized_weapons[strtolower(str_replace('-', '', $weapon))] = array(
+             'original' => $weapon,
+             'icon' => $icon
+         );
+     }
+     
+     // Recorrer las etiquetas y mostrar los iconos de armas que coincidan
+     foreach ($post_tags as $tag) {
+         $tag_name = strtolower(str_replace('-', '', $tag->name));
+         
+         // Verificar coincidencias con armas
+         foreach ($normalized_weapons as $weapon_key => $weapon_data) {
+             if (strpos($tag_name, $weapon_key) !== false || strpos($weapon_key, $tag_name) !== false) {
+                 echo '<img class="weapon-icon-tag" src="' . esc_url($weapon_data['icon']) . '" alt="' . esc_attr($weapon_data['original']) . '" title="' . esc_attr($weapon_data['original']) . '" width="24" height="24">';
+                 break;
+             }
+         }
+     }
+     
+     echo '</span>';
+ }
+?>

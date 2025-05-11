@@ -2194,3 +2194,39 @@ body.category-builds .pagination .page-numbers:hover {
     background: rgba(255, 255, 255, 0.1);
     color: #ff8533;
 }
+
+/* Estilos para iconos de armas en builds */
+.weapon-icons {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+.weapon-icon-tag {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.weapon-icon-tag:hover {
+    transform: scale(1.2);
+}
+
+/* Para la página de archivo */
+.name-archive .weapon-icons {
+    display: inline-flex;
+    margin-top: 5px;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Para la página principal */
+.entry-title + .weapon-icons {
+    margin-top: 8px;
+    display: flex;
+    justify-content: flex-start;
+}

@@ -165,6 +165,7 @@ get_header();?>
                     <?php endif; ?>
                 <h2 class="name-archive">
                     <a class="name-archive text-center" href="<?php the_permalink();?>"><?php the_title();?></a>
+                    <?php liukin_display_weapon_icons(); ?>
                 </h2>      
             </div>
         </div>

@@ -44,6 +44,7 @@ get_template_part('template-parts/search-form', 'search-form');
                             <a href="<?php the_permalink(); ?>" aria-labelledby="post-<?php the_ID(); ?>">
                                 <h2 id="post-<?php the_ID(); ?>" class="entry-title"><?php the_title(); ?></h2>
                             </a>
+                            <?php liukin_display_weapon_icons(); ?>
                             
                             <div class="post-meta">
                                 <time class="sr-date screen-reader-text" datetime="<?php echo get_the_date('c'); ?>">Publicado el: <?php echo get_the_date(); ?></time>
