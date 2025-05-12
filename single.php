@@ -1,5 +1,25 @@
-<?php get_header();?>
-    <?php get_template_part('template-parts/search-form', 'search-form');?>
+<?php 
+get_header();
+
+// Verificar si el post pertenece a la categoría builds
+$is_builds = false;
+$categories = get_the_category();
+if (!empty($categories)) {
+    foreach ($categories as $category) {
+        if ($category->slug === 'builds') {
+            $is_builds = true;
+            break;
+        }
+    }
+}
+
+// Cargar el template de cabecera adecuado
+if ($is_builds) {
+    get_template_part('template-parts/search-form-builds', 'search-form-builds');
+} else {
+    get_template_part('template-parts/search-form', 'search-form');
+}
+?>
     <div class="container">
         <div class="row">
             <div class="col-lg-12 posts-single">

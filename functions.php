@@ -322,19 +322,23 @@
  add_action('wp_enqueue_scripts', 'theme_enqueue_scripts');
  
  /**
-  * Muestra iconos de armas basados en las etiquetas del post
-  *
-  * Verifica si un post tiene etiquetas relacionadas con armas y
-  * muestra los iconos correspondientes.
+  * Muestra los iconos de armas para un post
+  * Versión optimizada con coincidencia más precisa
   */
- function liukin_display_weapon_icons() {
-     // Verificar si el post tiene etiquetas de armas
-     $post_tags = get_the_tags();
-     if (!$post_tags) {
-         return;
+ function liukin_display_weapon_icons($post_id = null) {
+     // Si no se proporciona ID, usar el post actual
+     if (!$post_id) {
+         $post_id = get_the_ID();
      }
      
-     echo '<span class="weapon-icons">';
+     // Verificar si el post tiene etiquetas
+     $post_tags = get_the_tags($post_id);
+     if (!$post_tags) {
+         return; // No mostrar nada si no hay etiquetas
+     }
+     
+     // Registro de armas mostradas para debugging
+     $debug_log = '';
      
      // Array de armas disponibles con sus iconos
      $weapons = array(
@@ -349,35 +353,539 @@
          'mosquete' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789149/mosquete2_uuvqiy.png',
          'hachuela' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789070/hatchet_dlslsr.webp',
          'trabuco' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746879119/bluder_tgrmqt.webp',
-         'gran-hacha' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789070/gran_hacha_fodiyg.webp',
+         'granhacha' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789070/gran_hacha_fodiyg.webp',
          'manopladehielo' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746879151/guantedehielo_u43hdy.png',
          'manopladevacio' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746879170/void_uzngfx.webp',
          'lanza' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789071/lanza2_ojc6vy.png',
-         'hacha-doble' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789068/firestaff_mjvj7w.png'
+         'hachadoble' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746879119/hachadoble_vqxtea.webp'
      );
      
-     // Normalizar nombres de armas para coincidir con etiquetas
-     $normalized_weapons = array();
-     foreach ($weapons as $weapon => $icon) {
-         $normalized_weapons[strtolower(str_replace('-', '', $weapon))] = array(
-             'original' => $weapon,
-             'icon' => $icon
+     // Mapeo de variantes de nombres de armas para coincidencia más flexible
+     $weapons_variants = array(
+         'arco' => array('arco'),
+         'estoque' => array('estoque', 'rapier'),
+         'mangual' => array('mangual', 'latigo', 'látigo'),
+         'espadon' => array('espadon', 'espadón', 'espada grande', 'espadagrande'),
+         'espada' => array('espada', 'espada y escudo', 'espadaescudo', 'sword'),
+         'baculodefuego' => array('baculodefuego', 'baculo de fuego', 'báculo de fuego', 'báculodefuego', 'baculo fuego', 'baculofuego', 'firestaff'),
+         'baculodevida' => array('baculodevida', 'baculo de vida', 'báculo de vida', 'báculodevida', 'baculo vida', 'baculovida', 'lifestaff'),
+         'martillo' => array('martillo', 'martillo de guerra', 'martillodeguerra', 'hammer'),
+         'mosquete' => array('mosquete', 'musket'),
+         'hachuela' => array('hachuela', 'hacha pequeña', 'hatchet'),
+         'trabuco' => array('trabuco', 'blunderbuss', 'bluder'),
+         'granhacha' => array('granhacha', 'gran hacha', 'hacha grande', 'hachagrande', 'greataxe'),
+         'manopladehielo' => array('manopladehielo', 'manopla de hielo', 'manoplahielo', 'guante de hielo', 'ice gauntlet'),
+         'manopladevacio' => array('manopladevacio', 'manopla de vacio', 'manoplavacio', 'guante de vacio', 'void gauntlet'),
+         'lanza' => array('lanza', 'spear'),
+         'hachadoble' => array('hacha-doble', 'hacha doble', 'hachadoble')
+     );
+     
+     // Array para rastrear las armas que ya se han mostrado
+     $shown_weapons = array();
+     
+     // Obtener nombres de etiquetas para registro
+     $tag_names = array();
+     foreach ($post_tags as $tag) {
+         $tag_names[] = $tag->name;
+     }
+     $debug_log .= "Post ID: {$post_id}, Título: " . get_the_title($post_id) . "\n";
+     $debug_log .= "Etiquetas: " . implode(', ', $tag_names) . "\n";
+     
+     // Primero normalizar todas las etiquetas para comparaciones precisas
+     $normalized_tags = array();
+     foreach ($post_tags as $tag) {
+         $tag_name = strtolower(trim($tag->name));
+         $tag_name_clean = str_replace(array('-', ' ', '_'), '', $tag_name);
+         $normalized_tags[] = array(
+             'original' => $tag_name,
+             'clean' => $tag_name_clean,
+             'tag' => $tag
          );
      }
      
-     // Recorrer las etiquetas y mostrar los iconos de armas que coincidan
-     foreach ($post_tags as $tag) {
-         $tag_name = strtolower(str_replace('-', '', $tag->name));
-         
-         // Verificar coincidencias con armas
-         foreach ($normalized_weapons as $weapon_key => $weapon_data) {
-             if (strpos($tag_name, $weapon_key) !== false || strpos($weapon_key, $tag_name) !== false) {
-                 echo '<img class="weapon-icon-tag" src="' . esc_url($weapon_data['icon']) . '" alt="' . esc_attr($weapon_data['original']) . '" title="' . esc_attr($weapon_data['original']) . '" width="24" height="24">';
-                 break;
+     // Array para almacenar las coincidencias exactas encontradas
+     $found_weapons = array();
+     
+     // Primera pasada: buscar coincidencias exactas
+     foreach ($weapons_variants as $weapon_key => $variants) {
+         foreach ($variants as $variant) {
+             $variant_clean = strtolower(str_replace(array(' ', '-', '_'), '', $variant));
+             
+             foreach ($normalized_tags as $tag_data) {
+                 // Coincidencia exacta
+                 if ($tag_data['clean'] === $variant_clean || 
+                     $tag_data['original'] === $variant) {
+                     $found_weapons[$weapon_key] = array(
+                         'confidence' => 1.0,  // Confianza máxima para coincidencia exacta
+                         'matched_tag' => $tag_data['original']
+                     );
+                     $debug_log .= "✓ Coincidencia EXACTA: {$weapon_key} para etiqueta {$tag_data['original']}\n";
+                     break 2; // Salir de los dos bucles internos
+                 }
              }
          }
      }
      
-     echo '</span>';
+     // Segunda pasada: buscar coincidencias parciales, solo si no hay coincidencia exacta para esa arma
+     foreach ($weapons_variants as $weapon_key => $variants) {
+         // Saltar si ya tenemos una coincidencia exacta para esta arma
+         if (isset($found_weapons[$weapon_key])) {
+             continue;
+         }
+         
+         foreach ($variants as $variant) {
+             $variant_clean = strtolower(str_replace(array(' ', '-', '_'), '', $variant));
+             
+             foreach ($normalized_tags as $tag_data) {
+                 // La etiqueta contiene la variante completa o viceversa (más preciso)
+                 if (strpos($tag_data['clean'], $variant_clean) === 0 || 
+                     strpos($variant_clean, $tag_data['clean']) === 0) {
+                     
+                     // Calcular un factor de confianza basado en la longitud de las cadenas
+                     $confidence = min(strlen($tag_data['clean']), strlen($variant_clean)) / 
+                                   max(strlen($tag_data['clean']), strlen($variant_clean));
+                     
+                     // Solo considerar coincidencias con confianza superior a 0.5
+                     if ($confidence > 0.5) {
+                         // Guardar o actualizar solo si es mejor que una coincidencia anterior
+                         if (!isset($found_weapons[$weapon_key]) || 
+                             $found_weapons[$weapon_key]['confidence'] < $confidence) {
+                             
+                             $found_weapons[$weapon_key] = array(
+                                 'confidence' => $confidence,
+                                 'matched_tag' => $tag_data['original']
+                             );
+                             $debug_log .= "✓ Coincidencia PARCIAL: {$weapon_key} para etiqueta {$tag_data['original']} (confianza: {$confidence})\n";
+                         }
+                     }
+                 }
+             }
+         }
+     }
+     
+     // Si no encontramos ninguna coincidencia, terminar
+     if (empty($found_weapons)) {
+         if (defined('WP_DEBUG') && WP_DEBUG) {
+             $log_file = dirname(__FILE__) . '/weapon-icons-debug.log';
+             $debug_log .= "No se encontraron coincidencias de armas para este post\n";
+             file_put_contents($log_file, $debug_log . "\n---\n", FILE_APPEND);
+         }
+         return;
+     }
+     
+     // Crear contenedor para los iconos
+     $icons_html = '<span class="weapon-icons">';
+     
+     // Ordenar las armas encontradas por nivel de confianza (descendente)
+     uasort($found_weapons, function($a, $b) {
+         return $b['confidence'] <=> $a['confidence'];
+     });
+     
+     // Mostrar solo las armas con alta confianza (>0.7) o las 2 mejores si todas son de baja confianza
+     $count = 0;
+     $max_icons = 2; // Máximo 2 iconos por post
+     
+     foreach ($found_weapons as $weapon_key => $match_data) {
+         // Si tenemos iconos de alta confianza, mostrar solo esos
+         if ($count >= $max_icons) {
+             break;
+         }
+         
+         if (isset($weapons[$weapon_key])) {
+             $icons_html .= '<img class="weapon-icon-tag" src="' . esc_url($weapons[$weapon_key]) . 
+                            '" alt="' . esc_attr($weapon_key) . '" title="' . esc_attr($weapon_key) . 
+                            '" data-match="' . esc_attr($match_data['matched_tag']) . 
+                            '" width="24" height="24">';
+             $shown_weapons[] = $weapon_key;
+             $count++;
+             $debug_log .= "➤ Mostrando icono: {$weapon_key} (confianza: {$match_data['confidence']})\n";
+         }
+     }
+     
+     // Cerrar el contenedor de iconos
+     $icons_html .= '</span>';
+     
+     // Solo mostrar los iconos si realmente hay alguno
+     if (count($shown_weapons) > 0) {
+         echo $icons_html;
+         $debug_log .= "Mostrando iconos: " . implode(', ', $shown_weapons) . "\n";
+     } else {
+         $debug_log .= "No se mostraron iconos para este post\n";
+     }
+     
+     // Guardar log de depuración si está activado
+     if (defined('WP_DEBUG') && WP_DEBUG) {
+         $log_file = dirname(__FILE__) . '/weapon-icons-debug.log';
+         file_put_contents($log_file, $debug_log . "\n---\n", FILE_APPEND);
+     }
  }
+
+/**
+ * Registra y carga el script para filtrado de armas
+ */
+function liukin_weapon_filter_scripts() {
+    // Solo cargar en páginas relevantes
+    if (is_archive() || is_home() || is_category()) {
+        // Asegurarse de que jQuery esté cargado
+        wp_enqueue_script('jquery');
+        
+        // Registrar y cargar el script de filtrado con jQuery como dependencia
+        wp_register_script('liukin-weapon-filter', get_template_directory_uri() . '/js/weapon-filter.js', array('jquery'), '1.0.1', true);
+        wp_enqueue_script('liukin-weapon-filter');
+        
+        // Pasar datos del sitio al script
+        wp_localize_script('liukin-weapon-filter', 'liukinWeaponFilter', array(
+            'ajaxurl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('liukin_weapon_filter_nonce'),
+            'current_category' => get_queried_object_id(),
+        ));
+    }
+}
+add_action('wp_enqueue_scripts', 'liukin_weapon_filter_scripts', 20);
+
+/**
+ * Maneja la solicitud AJAX para filtrar posts por arma y/o rol
+ */
+function liukin_filter_posts_by_criteria() {
+    // Verificar nonce
+    check_ajax_referer('liukin_weapon_filter_nonce', 'nonce');
+    
+    // Obtener parámetros
+    $weapon = isset($_POST['weapon']) ? sanitize_text_field($_POST['weapon']) : '';
+    $role = isset($_POST['role']) ? sanitize_text_field($_POST['role']) : '';
+    $category = isset($_POST['category']) ? intval($_POST['category']) : 0;
+    
+    // Crear archivo de log para depuración
+    $log_file = dirname(__FILE__) . '/filter-debug.log';
+    $log = "=== FILTRADO " . date('Y-m-d H:i:s') . " ===\n";
+    $log .= "Parámetros recibidos: weapon={$weapon}, role={$role}, category={$category}\n\n";
+    
+    // Normalizar el nombre del arma (eliminar acentos, convertir a minúsculas, etc.)
+    if (!empty($weapon)) {
+        // Normalizar nombre del arma
+        $weapon = strtolower(trim($weapon));
+        $weapon = str_replace(' de ', 'de', $weapon);
+        $weapon = str_replace(' ', '', $weapon);
+        
+        $log .= "Nombre de arma normalizado: {$weapon}\n";
+        
+        // Mapeo de variantes comunes 
+        $weapon_mapping = array(
+            'espadón' => 'espadon',
+            'espadon' => 'espadon',
+            'espada' => 'espada',
+            'arco' => 'arco',
+            'estoque' => 'estoque',
+            'mangual' => 'mangual',
+            'baculodefuego' => 'baculodefuego',
+            'báculodefuego' => 'baculodefuego',
+            'baculofuego' => 'baculodefuego',
+            'baculodevida' => 'baculodevida',
+            'báculodevida' => 'baculodevida',
+            'baculovida' => 'baculodevida',
+            'martillo' => 'martillo',
+            'mosquete' => 'mosquete',
+            'hachuela' => 'hachuela',
+            'trabuco' => 'trabuco',
+            'granhacha' => 'granhacha',
+            'manopladehielo' => 'manopladehielo',
+            'manoplahielo' => 'manopladehielo',
+            'manopladevacio' => 'manopladevacio',
+            'manoplavacio' => 'manopladevacio',
+            'lanza' => 'lanza',
+            'hachadoble' => 'hachadoble',
+            'hacha-doble' => 'hachadoble'
+        );
+        
+        // Verificar si tenemos una variante del arma en nuestro mapeo
+        if (isset($weapon_mapping[$weapon])) {
+            $original_weapon = $weapon;
+            $weapon = $weapon_mapping[$weapon];
+            $log .= "Arma mapeada: {$original_weapon} -> {$weapon}\n";
+        }
+    }
+    
+    // Argumentos básicos para la consulta
+    $args = array(
+        'post_type' => 'post',
+        'posts_per_page' => -1,
+        'post_status' => 'publish'
+    );
+    
+    // Obtener IDs de armas (tags) y roles (categorías)
+    if (!empty($weapon)) {
+        // Buscar etiqueta por nombre o slug que coincida con el arma
+        $weapon_tag = get_term_by('name', $weapon, 'post_tag');
+        
+        if (!$weapon_tag) {
+            // Intentar con slug si no se encuentra por nombre
+            $weapon_tag = get_term_by('slug', $weapon, 'post_tag');
+        }
+        
+        if (!$weapon_tag) {
+            // Búsqueda más flexible: etiquetas que contengan el nombre del arma
+            $weapon_tags = get_terms(array(
+                'taxonomy' => 'post_tag',
+                'hide_empty' => false,
+                'search' => $weapon
+            ));
+            
+            if (!empty($weapon_tags) && !is_wp_error($weapon_tags)) {
+                $weapon_tag = $weapon_tags[0]; // Tomar la primera coincidencia
+                $log .= "Etiqueta encontrada por búsqueda parcial: {$weapon_tag->name} (ID: {$weapon_tag->term_id})\n";
+            }
+        }
+        
+        if ($weapon_tag && !is_wp_error($weapon_tag)) {
+            $log .= "Etiqueta de arma encontrada: {$weapon_tag->name} (ID: {$weapon_tag->term_id})\n";
+            // Usar el nombre exacto de la etiqueta encontrada
+            $args['tag'] = $weapon_tag->slug;
+        } else {
+            // Si no encontramos una etiqueta exacta, usar el nombre original como fallback
+            $args['tag'] = $weapon;
+            $log .= "No se encontró etiqueta exacta, usando el nombre original: {$weapon}\n";
+        }
+    }
+    
+    // CASO 1: Filtrar solo por rol (categoría)
+    if (!empty($role) && empty($weapon)) {
+        $args['category_name'] = $role;
+        $log .= "Filtrado SOLO POR ROL: {$role}\n";
+    }
+    // CASO 2: Filtrar solo por arma (etiqueta)
+    else if (empty($role) && !empty($weapon)) {
+        // Ya configurado anteriormente
+        $log .= "Filtrado SOLO POR ARMA\n";
+    }
+    // CASO 3: Filtrar por ambos criterios
+    else if (!empty($role) && !empty($weapon)) {
+        $args['category_name'] = $role;
+        // args['tag'] ya está configurado
+        $log .= "Filtrado POR AMBOS: arma y rol={$role}\n";
+    }
+    
+    // Si estamos en una página de categoría específica y no hay filtro de rol
+    if ($category > 0 && empty($role)) {
+        $args['cat'] = $category;
+        $log .= "Añadido filtro de categoría específica: {$category}\n";
+    }
+    
+    $log .= "Argumentos finales de consulta: " . print_r($args, true) . "\n\n";
+    
+    // Ejecutar la consulta
+    $query = new WP_Query($args);
+    $log .= "Posts encontrados: " . $query->post_count . "\n";
+    
+    // Si hay resultados, registrar los títulos para depuración
+    if ($query->have_posts()) {
+        $log .= "Títulos de posts encontrados:\n";
+        while ($query->have_posts()) {
+            $query->the_post();
+            $post_id = get_the_ID();
+            $log .= "- " . get_the_title() . " (ID: {$post_id})\n";
+            
+            // Registrar tags del post
+            $post_tags = get_the_tags($post_id);
+            if ($post_tags) {
+                $tag_names = array();
+                foreach ($post_tags as $tag) {
+                    $tag_names[] = $tag->name;
+                }
+                $log .= "  Tags: " . implode(', ', $tag_names) . "\n";
+            } else {
+                $log .= "  Sin tags\n";
+            }
+            
+            // Registrar categorías del post
+            $categories = get_the_category($post_id);
+            if ($categories) {
+                $cat_names = array();
+                foreach ($categories as $cat) {
+                    $cat_names[] = $cat->name;
+                }
+                $log .= "  Categorías: " . implode(', ', $cat_names) . "\n";
+            } else {
+                $log .= "  Sin categorías\n";
+            }
+        }
+        // Reiniciar el loop para usarlo después
+        $query->rewind_posts();
+    }
+    
+    // Guardar el log
+    file_put_contents($log_file, $log, FILE_APPEND);
+    
+    // Preparar respuesta
+    $response = array();
+    
+    if ($query->have_posts()) {
+        ob_start();
+        ?>
+        <div class="filter-results-container">
+            <div class="filtered-results-row">
+            <?php
+            // Inicializar contador
+            $count = 0;
+            
+            // Mostrar los posts
+            while ($query->have_posts()) {
+                $query->the_post();
+                
+                // Determinar el rol (categoría) del post
+                $role_class = '';
+                if (has_category('tank')) {
+                    $role_class = 'role-tank';
+                } elseif (has_category('healer')) {
+                    $role_class = 'role-healer';
+                } elseif (has_category('dps')) {
+                    $role_class = 'role-dps';
+                }
+                ?>
+                <div class="filtered-item">
+                    <div class="featured-archive card-body phome <?php echo $role_class; ?>">
+                        <?php if (has_post_thumbnail()) : ?>
+                            <a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>">
+                                <?php the_post_thumbnail(); ?>
+                            </a>
+                        <?php endif; ?>
+                        <h2 class="name-archive">
+                            <a class="name-archive text-center" href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                            <?php liukin_display_weapon_icons(get_the_ID()); ?>
+                        </h2>
+                    </div>
+                </div>
+                <?php
+                $count++;
+            }
+            
+            // Mostrar mensaje si no hay resultados (aunque esto no debería ocurrir aquí)
+            if ($count === 0) {
+                ?>
+                <div class="filtered-item empty-results">
+                    <div class="card-body">
+                        <p class="text-center">No se encontraron builds con los criterios seleccionados.</p>
+                    </div>
+                </div>
+                <?php
+            }
+            
+            // Cerrar el contenedor grid y el contenedor principal
+            ?>
+            </div><!-- Cierre de la fila grid -->
+        </div><!-- Cierre del contenedor de resultados -->
+        <?php
+        
+        wp_reset_postdata();
+        
+        $html = ob_get_clean();
+        $response['html'] = $html;
+        $response['count'] = $count;
+        $response['success'] = true;
+    } else {
+        ob_start();
+        ?>
+        <div class="filter-results-container">
+            <div class="filtered-results-row">
+                <div class="filtered-item empty-results">
+                    <div class="card-body">
+                        <p class="text-center">No hay builds disponibles con estos criterios. Intenta con otra combinación o muestra todas las builds.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+        $html = ob_get_clean();
+        $response['html'] = $html;
+        $response['count'] = 0;
+        $response['success'] = true;
+    }
+    
+    wp_send_json($response);
+}
+add_action('wp_ajax_liukin_filter_posts_by_criteria', 'liukin_filter_posts_by_criteria');
+add_action('wp_ajax_nopriv_liukin_filter_posts_by_criteria', 'liukin_filter_posts_by_criteria');
+
+// Mantener la función original para compatibilidad
+add_action('wp_ajax_liukin_filter_posts_by_weapon', 'liukin_filter_posts_by_criteria');
+add_action('wp_ajax_nopriv_liukin_filter_posts_by_weapon', 'liukin_filter_posts_by_criteria');
+
+/**
+ * Función de depuración para registrar información sobre etiquetas y filtrados
+ */
+function liukin_debug_tags() {
+    $log_file = dirname(__FILE__) . '/filter-debug.log';
+    $message = "=== DEPURACIÓN DE FILTROS ===\n";
+    $message .= "Fecha: " . date('Y-m-d H:i:s') . "\n\n";
+    
+    // Obtener todas las etiquetas
+    $tags = get_tags(array('hide_empty' => false));
+    
+    $message .= "ETIQUETAS DISPONIBLES (" . count($tags) . " total):\n";
+    foreach ($tags as $tag) {
+        $message .= "- {$tag->name} (ID: {$tag->term_id}, Slug: {$tag->slug})\n";
+    }
+    
+    $message .= "\nDEPURANDO COINCIDENCIAS DE ARMAS:\n";
+    
+    // Lista de armas
+    $weapons = array(
+        'arco', 'estoque', 'mangual', 'espadon', 'espada', 
+        'baculodefuego', 'baculodevida', 'martillo', 'mosquete', 
+        'hachuela', 'trabuco', 'granhacha', 'manopladehielo', 
+        'manopladevacio', 'lanza'
+    );
+    
+    foreach ($weapons as $weapon) {
+        $message .= "\nArma: {$weapon}\n";
+        $message .= "  - Etiquetas coincidentes:\n";
+        
+        $found = false;
+        foreach ($tags as $tag) {
+            $tag_name = strtolower($tag->name);
+            $tag_slug = strtolower($tag->slug);
+            
+            if (strpos($tag_name, $weapon) !== false || 
+                strpos($weapon, $tag_name) !== false ||
+                strpos($tag_slug, $weapon) !== false ||
+                strpos($weapon, str_replace('-', '', $tag_slug)) !== false) {
+                
+                $message .= "    * {$tag->name} (ID: {$tag->term_id}, Slug: {$tag->slug})\n";
+                $found = true;
+                
+                // Ver qué posts tienen esta etiqueta
+                $posts = get_posts(array(
+                    'tag_id' => $tag->term_id,
+                    'posts_per_page' => -1
+                ));
+                
+                if (!empty($posts)) {
+                    $message .= "      - Posts con esta etiqueta (" . count($posts) . "):\n";
+                    foreach ($posts as $post) {
+                        $message .= "        * {$post->post_title} (ID: {$post->ID})\n";
+                    }
+                } else {
+                    $message .= "      - No hay posts con esta etiqueta\n";
+                }
+            }
+        }
+        
+        if (!$found) {
+            $message .= "    * Ninguna etiqueta coincide con '{$weapon}'\n";
+        }
+    }
+    
+    // Guardar en el archivo
+    file_put_contents($log_file, $message);
+    
+    return "Información de depuración guardada en: {$log_file}";
+}
+
+// Añadir hooky para ejecutar la depuración al cargar la página
+add_action('wp_footer', function() {
+    if (current_user_can('manage_options') && isset($_GET['debug_tags'])) {
+        echo '<div style="position:fixed;bottom:0;left:0;right:0;background:#333;color:#fff;padding:10px;z-index:9999;">'.
+             liukin_debug_tags() .
+             '</div>';
+    }
+});
 ?>

@@ -1,7 +1,25 @@
 <?php 
-// Cargar header y buscador
+// Cargar header
 get_header();
-get_template_part('template-parts/search-form', 'search-form');
+
+// Verificar si estamos en la categoría de builds
+$is_builds_category = false;
+$categories = get_the_category();
+if (!empty($categories)) {
+    foreach ($categories as $category) {
+        if ($category->slug === 'builds') {
+            $is_builds_category = true;
+            break;
+        }
+    }
+}
+
+// Cargar el template apropiado según la categoría
+if ($is_builds_category) {
+    get_template_part('template-parts/search-form-builds', 'search-form-builds');
+} else {
+    get_template_part('template-parts/search-form', 'search-form');
+}
 ?>
 
 <main id="main-content" role="main">

@@ -7,8 +7,15 @@ if (is_category('builds')) {
     });
 }
 
-get_header();?>
-<?php get_template_part('template-parts/search-form', 'search-form');?>
+get_header();
+
+// Cargar template específico según categoría
+if (is_category('builds')) {
+    get_template_part('template-parts/search-form-builds', 'search-form-builds');
+} else {
+    get_template_part('template-parts/search-form', 'search-form');
+}
+?>
     <div class="container">
     <br/>
     <?php 
@@ -29,7 +36,7 @@ get_header();?>
         echo '<div class="roles-grid">';
         
         // Tank
-        echo '<div class="role-card tank">';
+        echo '<div class="role-card tank" data-role="tank">';
         echo '<div class="role-icon">';
         echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746788379/tank5_we9zzm.png" alt="Tank">';
         echo '</div>';
@@ -42,11 +49,10 @@ get_header();?>
         ));
         echo '<span class="build-count">' . count($tank_count) . ' builds</span>';
         echo '</div>';
-        echo '<a href="https://pc-solucion.es/rol/builds/tank/" class="role-link" aria-label="Ver builds de Tank"></a>';
         echo '</div>';
         
         // Healer
-        echo '<div class="role-card healer">';
+        echo '<div class="role-card healer" data-role="healer">';
         echo '<div class="role-icon">';
         echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746788528/healer5_ues0su.png" alt="Healer">';
         echo '</div>';
@@ -59,11 +65,10 @@ get_header();?>
         ));
         echo '<span class="build-count">' . count($healer_count) . ' builds</span>';
         echo '</div>';
-        echo '<a href="https://pc-solucion.es/rol/builds/healer/" class="role-link" aria-label="Ver builds de Healer"></a>';
         echo '</div>';
         
         // DPS
-        echo '<div class="role-card dps">';
+        echo '<div class="role-card dps" data-role="dps">';
         echo '<div class="role-icon">';
         echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746788472/dps5_ewferb.png" alt="DPS">';
         echo '</div>';
@@ -76,15 +81,13 @@ get_header();?>
         ));
         echo '<span class="build-count">' . count($dps_count) . ' builds</span>';
         echo '</div>';
-        echo '<a href="https://pc-solucion.es/rol/builds/dps/" class="role-link" aria-label="Ver builds de DPS"></a>';
         echo '</div>';
         
         echo '</div>'; // Cierre de roles-grid
         echo '</div>'; // Cierre de roles-section
         
-        // Sección de armas
+        // Sección de armas - ahora sin título
         echo '<div class="weapons-section">';
-        echo '<h2 class="section-title">Armas</h2>';
         echo '<div class="weapons-container">';
         
         // Array de armas con sus datos
@@ -95,7 +98,7 @@ get_header();?>
             array('name' => 'Estoque', 'icon' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789149/rapier_i1icgl.webp', 'link' => '#'),
             array('name' => 'Báculo de fuego', 'icon' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789068/firestaff_mjvj7w.png', 'link' => '#'),
             array('name' => 'Báculo de vida', 'icon' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746879096/baculo_de_vida_progenitor_pvfzzj.webp', 'link' => '#'),
-            array('name' => 'Arco', 'icon' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789066/arco2_gfza10.png', 'link' => 'https://pc-solucion.es/t/arco/'),
+            array('name' => 'Arco', 'icon' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789066/arco2_gfza10.png', 'link' => '#'),
             array('name' => 'Martillo', 'icon' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789149/martillodeguerra_katfte.png', 'link' => '#'),
             array('name' => 'Mosquete', 'icon' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789149/mosquete2_uuvqiy.png', 'link' => '#'),
             array('name' => 'Hachuela', 'icon' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789070/hatchet_dlslsr.webp', 'link' => '#'),
@@ -103,37 +106,18 @@ get_header();?>
             array('name' => 'Gran Hacha', 'icon' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789070/gran_hacha_fodiyg.webp', 'link' => '#'),
             array('name' => 'Manopla de hielo', 'icon' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746879151/guantedehielo_u43hdy.png', 'link' => '#'),
             array('name' => 'Manopla de vacío', 'icon' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746879170/void_uzngfx.webp', 'link' => '#'),
-            array('name' => 'Lanza', 'icon' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789071/lanza2_ojc6vy.png', 'link' => '#'),
-            array('name' => 'Hacha doble', 'icon' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789068/firestaff_mjvj7w.png', 'link' => '#')
+            array('name' => 'Lanza', 'icon' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789071/lanza2_ojc6vy.png', 'link' => '#')
         );
         
-        // Dividir en dos filas exactamente
-        $rows = array_chunk($weapons, 8);
-        
-        // Primera fila
-        echo '<div class="weapons-row">';
-        foreach ($rows[0] as $weapon) {
+        // Una sola fila con todas las armas
+        echo '<div class="weapons-row weapons-single-row">';
+        foreach ($weapons as $weapon) {
             echo '<div class="weapon-card">';
-            echo '<a href="' . esc_url($weapon['link']) . '" class="weapon-link">';
+            echo '<div class="weapon-filter-action" data-weapon="' . esc_attr($weapon['name']) . '">';
             echo '<div class="weapon-icon">';
-            echo '<img src="' . esc_url($weapon['icon']) . '" alt="' . esc_attr($weapon['name']) . '">';
+            echo '<img src="' . esc_url($weapon['icon']) . '" alt="' . esc_attr($weapon['name']) . '" title="' . esc_attr($weapon['name']) . '">';
             echo '</div>';
-            echo '<span class="weapon-name">' . esc_html($weapon['name']) . '</span>';
-            echo '</a>';
             echo '</div>';
-        }
-        echo '</div>';
-        
-        // Segunda fila
-        echo '<div class="weapons-row">';
-        foreach ($rows[1] as $weapon) {
-            echo '<div class="weapon-card">';
-            echo '<a href="' . esc_url($weapon['link']) . '" class="weapon-link">';
-            echo '<div class="weapon-icon">';
-            echo '<img src="' . esc_url($weapon['icon']) . '" alt="' . esc_attr($weapon['name']) . '">';
-            echo '</div>';
-            echo '<span class="weapon-name">' . esc_html($weapon['name']) . '</span>';
-            echo '</a>';
             echo '</div>';
         }
         echo '</div>';
