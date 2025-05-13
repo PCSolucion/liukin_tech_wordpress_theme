@@ -149,7 +149,8 @@
                     console.log('Deseleccionando arma actual');
                     
                     // Eliminar clase de filtro activo de armas
-                    $(this).closest('.weapon-card').removeClass('filter-active');
+                    $('.weapon-card').removeClass('filter-active');
+                    $('.weapon-item-static').removeClass('filter-active');
                     $('.weapon-icon-tag').removeClass('filter-active');
                     
                     showFeedbackMessage('Eliminando filtro de arma');
@@ -935,110 +936,52 @@
      * Resalta visualmente los filtros que están activos
      */
     function highlightActiveFilters() {
-        console.log('Resaltando filtros activos');
+        console.log('Actualizando indicadores visuales de filtros activos');
         
-        // Eliminar resaltados anteriores
-        $('.weapon-card').removeClass('filter-active');
+        // Limpiar clases de filtro activo
         $('.role-card').removeClass('filter-active');
+        $('.weapon-card').removeClass('filter-active');
         $('.weapon-icon-tag').removeClass('filter-active');
+        $('.weapon-item-static').removeClass('filter-active');
         
-        console.log('Resaltando filtros: Arma=' + currentFilters.weapon + ', Rol=' + currentFilters.role);
-        
-        // Si no hay filtros activos, salir sin aplicar resaltados
-        if (!currentFilters.weapon && !currentFilters.role) {
-            console.log('No hay filtros activos, no se aplican resaltados');
-            return;
-        }
-        
-        // Resaltar arma activa si hay alguna
-        if (currentFilters.weapon) {
-            // Normalizar el nombre del arma para comparaciones
-            const weaponLower = currentFilters.weapon.toLowerCase().trim();
-            
-            // Resaltar las tarjetas de armas
-            $('.weapon-filter-action').each(function() {
-                if ($(this).data('weapon')) {
-                    const cardWeapon = $(this).data('weapon').toLowerCase().trim();
-                    // Comparación exacta o verificar palabras completas
-                    if (cardWeapon === weaponLower || 
-                        (' ' + cardWeapon + ' ').includes(' ' + weaponLower + ' ')) {
-                        $(this).closest('.weapon-card').addClass('filter-active');
-                        console.log('Arma resaltada (tarjeta): ' + cardWeapon);
-                    }
-                }
-            });
-            
-            // También resaltar iconos de arma en las tarjetas
-            $('.weapon-icon-tag').each(function() {
-                const iconTitle = ($(this).attr('title') || $(this).attr('alt') || '').toLowerCase().trim();
-                const rawIconTitle = $(this).attr('title') || $(this).attr('alt') || '';
-                
-                console.log('Evaluando icono: [' + rawIconTitle + '] contra filtro activo: [' + currentFilters.weapon + ']');
-                
-                // Crear un mapeo explícito de armas para comparación exacta
-                const weaponTypes = {
-                    'baculo_fuego': ['báculo de fuego', 'báculo fuego', 'baculo de fuego', 'baculo fuego', 'baculodefuego'],
-                    'baculo_vida': ['báculo de vida', 'báculo vida', 'baculo de vida', 'baculo vida', 'baculodevida'],
-                    'manopla_hielo': ['manopla de hielo', 'manopla hielo', 'manopladehielo'],
-                    'manopla_vacio': ['manopla de vacío', 'manopla vacío', 'manopla de vacio', 'manopla vacio', 'manopladevacio', 'manoplavacio'],
-                    'gran_hacha': ['gran hacha', 'hacha grande', 'granhacha'],
-                    'espadon': ['espadón', 'espada grande'],
-                    'hacha_doble': ['hacha doble', 'hachadoble'],
-                    'arco_logico': ['arco lógico', 'arco logico', 'arcologico'],
-                    'arco': ['arco'],
-                    'dagas': ['dagas'],
-                    'escopeta': ['escopeta'],
-                    'espada': ['espada'],
-                    'lanza': ['lanza'],
-                    'martillo': ['martillo']
-                };
-                
-                // Convertir weaponLower a formato estándar para comparación
-                let normalizedCurrentWeapon = weaponLower;
-                
-                // Normalizar el arma actual a su identificador estándar
-                for (const [type, aliases] of Object.entries(weaponTypes)) {
-                    if (weaponLower === type || aliases.includes(weaponLower)) {
-                        normalizedCurrentWeapon = type;
-                        console.log('Filtro actual normalizado: ' + weaponLower + ' -> ' + type);
-                        break;
-                    }
-                }
-                
-                // Normalizar el título del icono para comparación
-                let normalizedIconTitle = iconTitle;
-                
-                // Buscar qué tipo de arma es este icono específico
-                for (const [type, aliases] of Object.entries(weaponTypes)) {
-                    if (aliases.includes(iconTitle) || type === iconTitle) {
-                        normalizedIconTitle = type;
-                        console.log('Título del icono normalizado: ' + iconTitle + ' -> ' + type);
-                        break;
-                    }
-                }
-                
-                // Comparación exacta: solo resaltar si es exactamente el mismo tipo de arma
-                const shouldHighlight = (normalizedCurrentWeapon === normalizedIconTitle);
-                
-                console.log('Comparación: ' + normalizedCurrentWeapon + ' === ' + normalizedIconTitle + ' => ' + shouldHighlight);
-                
-                if (shouldHighlight) {
-                    $(this).addClass('filter-active');
-                    console.log('✅ Arma resaltada (icono): ' + iconTitle + ' [ID normalizado: ' + normalizedIconTitle + ']');
-                }
-            });
-        }
-        
-        // Resaltar rol activo si hay alguno
+        // Resaltar filtro de rol activo si existe
         if (currentFilters.role) {
-            const roleLower = currentFilters.role.toLowerCase().trim();
-            $('.role-card').each(function() {
-                if ($(this).hasClass(roleLower) || $(this).data('role') === roleLower) {
+            $('.role-card.' + currentFilters.role).addClass('filter-active');
+        }
+        
+        // Resaltar filtro de arma activa si existe
+        if (currentFilters.weapon) {
+            // Procesar nombre del arma para la búsqueda (normalizar)
+            const weaponName = currentFilters.weapon.trim().toLowerCase();
+            
+            // Aplicar clase activa a todas las representaciones del arma seleccionada
+            $('.weapon-filter-action').each(function() {
+                const thisWeapon = $(this).data('weapon');
+                if (thisWeapon && thisWeapon.trim().toLowerCase() === weaponName) {
                     $(this).addClass('filter-active');
-                    console.log('Rol resaltado: ' + roleLower);
+                    
+                    // Si es un elemento dentro de una tarjeta, añadir la clase a la tarjeta también
+                    if ($(this).closest('.weapon-card').length) {
+                        $(this).closest('.weapon-card').addClass('filter-active');
+                    }
+                    
+                    // Si es un elemento weapon-item-static, aplicar clase directamente
+                    if ($(this).hasClass('weapon-item-static')) {
+                        $(this).addClass('filter-active');
+                    }
+                }
+            });
+            
+            // También aplicar a las etiquetas de armas en los posts
+            $('.weapon-icon-tag').each(function() {
+                const thisWeapon = $(this).data('weapon') || $(this).attr('title') || $(this).attr('alt');
+                if (thisWeapon && thisWeapon.trim().toLowerCase() === weaponName) {
+                    $(this).addClass('filter-active');
                 }
             });
         }
+        
+        console.log('Indicadores visuales actualizados');
     }
     
     /**

@@ -35,7 +35,7 @@ if (is_category('builds')) {
         echo '<div class="roles-section">';
         echo '<div class="roles-grid">';
         
-        // Tank
+        // Tank - Ahora primero
         echo '<div class="role-card tank" data-role="tank">';
         echo '<div class="role-icon">';
         echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746788379/tank5_we9zzm.png" alt="Tank">';
@@ -51,23 +51,7 @@ if (is_category('builds')) {
         echo '</div>';
         echo '</div>';
         
-        // Healer
-        echo '<div class="role-card healer" data-role="healer">';
-        echo '<div class="role-icon">';
-        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746788528/healer5_ues0su.png" alt="Healer">';
-        echo '</div>';
-        echo '<div class="role-info">';
-        echo '<h3>Healer</h3>';
-        $healer_count = get_posts(array(
-            'category_name' => 'healer',
-            'posts_per_page' => -1,
-            'post_status' => 'publish'
-        ));
-        echo '<span class="build-count">' . count($healer_count) . ' builds</span>';
-        echo '</div>';
-        echo '</div>';
-        
-        // DPS
+        // DPS - En medio
         echo '<div class="role-card dps" data-role="dps">';
         echo '<div class="role-icon">';
         echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746788472/dps5_ewferb.png" alt="DPS">';
@@ -83,12 +67,28 @@ if (is_category('builds')) {
         echo '</div>';
         echo '</div>';
         
+        // Healer - Ahora último
+        echo '<div class="role-card healer" data-role="healer">';
+        echo '<div class="role-icon">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1746788528/healer5_ues0su.png" alt="Healer">';
+        echo '</div>';
+        echo '<div class="role-info">';
+        echo '<h3>Healer</h3>';
+        $healer_count = get_posts(array(
+            'category_name' => 'healer',
+            'posts_per_page' => -1,
+            'post_status' => 'publish'
+        ));
+        echo '<span class="build-count">' . count($healer_count) . ' builds</span>';
+        echo '</div>';
+        echo '</div>';
+        
         echo '</div>'; // Cierre de roles-grid
         echo '</div>'; // Cierre de roles-section
         
-        // Sección de armas - ahora sin título
-        echo '<div class="weapons-section">';
-        echo '<div class="weapons-container">';
+        // Sección de armas - rehecha completamente
+        echo '<div class="weapons-static-section">';
+        echo '<div class="weapons-wrapper">';
         
         // Array de armas con sus datos
         $weapons = array(
@@ -109,21 +109,18 @@ if (is_category('builds')) {
             array('name' => 'Lanza', 'icon' => 'https://res.cloudinary.com/pcsolucion/image/upload/v1746789071/lanza2_ojc6vy.png', 'link' => '#')
         );
         
-        // Una sola fila con todas las armas
-        echo '<div class="weapons-row weapons-single-row">';
+        // Contenedor de iconos en una sola fila
+        echo '<div class="weapons-row-fixed">';
         foreach ($weapons as $weapon) {
-            echo '<div class="weapon-card">';
-            echo '<div class="weapon-filter-action" data-weapon="' . esc_attr($weapon['name']) . '">';
-            echo '<div class="weapon-icon">';
-            echo '<img src="' . esc_url($weapon['icon']) . '" alt="' . esc_attr($weapon['name']) . '" title="' . esc_attr($weapon['name']) . '">';
-            echo '</div>';
-            echo '</div>';
+            echo '<div class="weapon-item-static weapon-filter-action" data-weapon="' . esc_attr($weapon['name']) . '">';
+            echo '<img src="' . esc_url($weapon['icon']) . '" alt="' . esc_attr($weapon['name']) . '">';
+            echo '<span class="weapon-name-tooltip">' . esc_html($weapon['name']) . '</span>';
             echo '</div>';
         }
         echo '</div>';
         
-        echo '</div>'; // Cierre de weapons-container
-        echo '</div>'; // Cierre de weapons-section
+        echo '</div>'; // Cierre de weapons-wrapper
+        echo '</div>'; // Cierre de weapons-static-section
         echo '</div>'; // Cierre de builds-category-wrapper
     }
     ?>

@@ -1754,6 +1754,13 @@ textarea:focus-visible {
     padding: 0.5rem 1rem;
     border-radius: 8px;
     max-width: 100%;
+    position: relative;
+    z-index: 5;
+    height: auto;
+    min-height: 90px;
+    overflow: visible;
+    isolation: isolate;
+    margin-bottom: 30px;
 }
 
 .weapons-container {
@@ -1761,67 +1768,34 @@ textarea:focus-visible {
     display: flex;
     flex-direction: column;
     margin: 0 auto;
+    position: relative;
+    transform: none;
+    height: auto;
+    min-height: 70px;
+    overflow: visible;
 }
 
-/* Estilos específicos para la fila única de armas */
 .weapons-single-row {
     display: flex;
-    flex-wrap: nowrap; /* Evitar que los elementos salten a la siguiente línea */
+    flex-wrap: nowrap;
     justify-content: center;
-    gap: 4px; /* Espacio reducido entre armas */
+    gap: 4px;
     width: 100%;
     padding: 0.5rem;
     margin: 0 auto;
-    overflow-x: auto; /* Permitir scroll horizontal si es necesario */
-    max-width: 900px; /* Aumentar el ancho máximo para acomodar todas las armas */
-    scrollbar-width: none; /* Ocultar scrollbar en Firefox */
-    -ms-overflow-style: none; /* Ocultar scrollbar en IE/Edge */
+    overflow-x: auto;
+    max-width: 900px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    position: relative;
+    transform: none !important;
+    height: auto;
+    min-height: 60px;
+    padding-bottom: 20px; /* Espacio para tooltips */
 }
 
-/* Ocultar scrollbar en Webkit (Chrome, Safari) */
-.weapons-single-row::-webkit-scrollbar {
-    display: none;
-}
-
-/* Ajustes para dispositivos más pequeños */
-@media (max-width: 767px) {
-    .weapons-single-row {
-        gap: 3px;
-        padding: 0.4rem;
-        justify-content: flex-start; /* Alinear al inicio en móviles */
-    }
-    
-    .weapon-card {
-        width: 38px;
-        height: 38px;
-        margin: 2px;
-        padding: 6px;
-        flex-shrink: 0; /* Evitar que los elementos se compriman */
-    }
-    
-    .weapon-icon {
-        width: 30px;
-        height: 30px;
-    }
-}
-
-/* Ajustes para dispositivos muy pequeños */
-@media (max-width: 400px) {
-    .weapons-single-row {
-        gap: 2px;
-    }
-    
-    .weapon-card {
-        width: 35px;
-        height: 35px;
-        margin: 1px;
-        padding: 5px;
-    }
-    
-    .weapon-icon {
-        width: 28px;
-        height: 28px;
-    }
+.weapons-single-row:hover {
+    pointer-events: auto !important;
 }
 
 .weapon-card {
@@ -1832,15 +1806,46 @@ textarea:focus-visible {
     border-radius: 24px;
     background-color: rgba(50, 50, 55, 0.2);
     margin: 3px;
-    padding: 6px; /* Reducido para compactar más */
+    padding: 6px;
     text-align: center;
-    transition: all 0.3s ease;
-    flex: 0 0 auto; /* No crecer, no encoger, tamaño automático */
-    width: 44px; /* Ancho fijo en lugar de min-width */
-    height: 44px; /* Altura fija para que todas sean iguales */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
     cursor: pointer;
-    position: relative; /* Añadido para posicionamiento de tooltip */
-    flex-shrink: 0; /* Prevenir que los elementos se compriman */
+    position: relative;
+    flex-shrink: 0;
+    transform: none !important;
+    z-index: 2;
+}
+
+.weapon-card:hover {
+    background-color: rgba(44, 34, 53, 0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.weapon-tooltip {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 100;
+    pointer-events: none;
+}
+
+.weapon-card:hover .weapon-tooltip {
+    opacity: 1;
+    visibility: visible;
 }
 
 .weapon-filter-action {
@@ -1877,9 +1882,9 @@ textarea:focus-visible {
 
 .weapon-card:hover {
     background-color: rgba(44, 34, 53, 0.3);
-    transform: translateY(-3px) scale(1.05);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 2;
+    /* NO usar transform aquí para evitar movimientos durante el scroll */
 }
 
 .weapon-card:hover .weapon-icon img {
@@ -1988,7 +1993,7 @@ textarea:focus-visible {
 
 /* Estilos para la página de builds */
 .builds-category-wrapper {
-    
+        margin-top: -10px !important;
     padding: 1.5rem;
     border-radius: 15px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -2494,7 +2499,7 @@ body.category-builds .logow img {
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('https://images.ctfassets.net/j95d1p8hsuun/57FoarRXU8qqx2Q78DrSU8/f874ebe6b26da4f07aca16d5ad1dd447/NWA_Trials_of_Aeternum_Key_Art_1920x1080.jpg') no-repeat center center;
+    background: url('https://res.cloudinary.com/pcsolucion/image/upload/v1747099856/1fondobuilds_oqzt9j.jpg') no-repeat center center;
     background-size: cover;
     z-index: 1;
 }
@@ -3028,7 +3033,7 @@ body.category-builds .logow img {
 
 .weapon-card:hover {
     background-color: rgba(44, 34, 53, 0.3);
-    transform: translateY(-3px) scale(1.05);
+    /* Eliminar transform para evitar desplazamientos durante el scroll */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 2;
 }
@@ -3042,6 +3047,10 @@ body.category-builds .logow img {
     margin-top: 5px;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     padding-top: 10px;
+    position: relative; /* Añadir posición relativa */
+    z-index: 1; /* Asegurar un contexto de apilamiento */
+    overflow: visible; /* Evitar recortes */
+    height: auto; /* Altura automática */
 }
 
 /* Asegurarse de que el indicador de carga y los mensajes de feedback nunca sean visibles */
@@ -3082,3 +3091,188 @@ body.category-builds .logow img {
     to { opacity: 1; }
 }
 
+/* Evitar problemas de desplazamiento durante el scroll */
+.weapons-section * {
+    transform: translateZ(0); /* Forzar aceleración hardware */
+    backface-visibility: hidden; /* Evitar parpadeos */
+    -webkit-backface-visibility: hidden; /* Para Safari */
+}
+
+/* Fijar las tarjetas de armas durante el scroll */
+.weapons-single-row .weapon-card {
+    position: relative; /* Posicionamiento relativo */
+    z-index: 1; /* Nivel de apilamiento */
+    transform: none !important; /* Prevenir transformaciones que causan desplazamiento */
+}
+
+.weapons-single-row::-webkit-scrollbar {
+    display: none;
+}
+
+/* ===== NUEVA SECCIÓN DE ARMAS ESTÁTICA ===== */
+.weapons-static-section {
+    width: 100%;
+    margin: 0 auto -37px;
+    padding: 10px 0;
+    position: relative;
+}
+
+.weapons-wrapper {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 10px;
+    position: relative;
+}
+
+.weapons-row-fixed {
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 5px 20px;
+    overflow-x: auto;
+    position: relative;
+    z-index: 1;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE y Edge */
+}
+
+.weapons-row-fixed::-webkit-scrollbar {
+    display: none; /* Chrome y Safari */
+}
+
+.weapon-item-static {
+    position: relative;
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(50, 50, 55, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.weapon-item-static img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+    transition: transform 0.3s;
+}
+
+.weapon-item-static:hover {
+    background-color: rgba(44, 34, 53, 0.5);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.weapon-item-static:hover img {
+    transform: scale(1.15);
+}
+
+.weapon-name-tooltip {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.weapon-item-static:hover .weapon-name-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Ajustes para dispositivos móviles */
+@media (max-width: 767px) {
+    .weapons-row-fixed {
+        justify-content: flex-start;
+        gap: 6px;
+    }
+    
+    .weapon-item-static {
+        width: 36px;
+        height: 36px;
+        padding: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .weapon-item-static {
+        width: 32px;
+        height: 32px;
+        padding: 4px;
+    }
+}
+
+/* Estilos para elementos con filtro activo */
+.weapon-item-static.filter-active {
+    background-color: rgba(44, 34, 53, 0.6);
+    box-shadow: 0 0 8px rgba(44, 34, 53, 0.8);
+    transform: scale(1.15);
+    z-index: 10;
+    position: relative;
+}
+
+.weapon-item-static.filter-active::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border: 2px solid rgba(44, 34, 53, 0.8);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+    z-index: -1;
+}
+
+.weapon-item-static.filter-active img {
+    transform: scale(1.1);
+}
+
+/* Asegurarse de que el indicador de carga y los mensajes de feedback sean visibles cuando se necesiten */
+.weapon-filter-loading.visible,
+.weapon-filter-feedback.visible,
+.reset-filter-float.visible,
+.reset-filter {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+}
+
+/* Remover las reglas que ocultan incondicionalmente estos elementos */
+/* Asegurarse de que el indicador de carga y los mensajes de feedback nunca sean visibles */
+.weapon-filter-loading,
+.weapon-filter-feedback {
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Asegurarse de que el indicador de carga, los mensajes de feedback y botones de reset nunca sean visibles */
+.weapon-filter-loading,
+.weapon-filter-feedback,
+.reset-filter-float,
+.reset-filter {
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
