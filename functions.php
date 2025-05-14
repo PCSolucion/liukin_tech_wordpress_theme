@@ -21,7 +21,7 @@
   * Encola hojas de estilo y scripts.
   * 
   * Registra y carga los estilos CSS y archivos JavaScript necesarios para el tema,
-  * y configura los parámetros para el scroll infinito y lightbox.
+  * y configura los parámetros para el scroll infinito.
   */
  function liukin_agregar_css_js() {
      // Desregistrar el estilo actual
@@ -35,14 +35,14 @@
      // Agregar JavaScript para scroll infinito
      wp_enqueue_script('liukin-infinite-scroll', get_template_directory_uri() . '/js/infinite-scroll.js', array(), '1.0', true);
  
-     // Agregar JavaScript para lightbox solo en single.php
+     // Agregar JavaScript para abrir imágenes en nueva pestaña
      if (is_single()) {
-         wp_enqueue_script('liukin-lightbox', get_template_directory_uri() . '/js/lightbox.js', array(), '1.0', true);
+         wp_enqueue_script('liukin-image-links', get_template_directory_uri() . '/js/lightbox.js', array(), '1.0', true);
      }
  
      // Agregar atributo defer al script
      add_filter('script_loader_tag', function($tag, $handle) {
-         if ('liukin-infinite-scroll' === $handle || 'liukin-lightbox' === $handle) {
+         if ('liukin-infinite-scroll' === $handle || 'liukin-image-links' === $handle) {
              return str_replace(' src', ' defer src', $tag);
          }
          return $tag;
