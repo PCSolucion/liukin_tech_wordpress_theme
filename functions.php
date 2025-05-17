@@ -553,12 +553,13 @@ function liukin_filter_posts_by_criteria() {
     // Obtener parámetros
     $weapon = isset($_POST['weapon']) ? sanitize_text_field($_POST['weapon']) : '';
     $role = isset($_POST['role']) ? sanitize_text_field($_POST['role']) : '';
+    $gamemode = isset($_POST['gamemode']) ? sanitize_text_field($_POST['gamemode']) : '';
     $category = isset($_POST['category']) ? intval($_POST['category']) : 0;
     
     // Crear archivo de log para depuración
     $log_file = dirname(__FILE__) . '/filter-debug.log';
     $log = "=== FILTRADO " . date('Y-m-d H:i:s') . " ===\n";
-    $log .= "Parámetros recibidos: weapon={$weapon}, role={$role}, category={$category}\n\n";
+    $log .= "Parámetros recibidos: weapon={$weapon}, role={$role}, gamemode={$gamemode}, category={$category}\n\n";
     
     // Normalizar el nombre del arma (eliminar acentos, convertir a minúsculas, etc.)
     if (!empty($weapon)) {
@@ -647,25 +648,43 @@ function liukin_filter_posts_by_criteria() {
         }
     }
     
-    // CASO 1: Filtrar solo por rol (categoría)
-    if (!empty($role) && empty($weapon)) {
-        $args['category_name'] = $role;
-        $log .= "Filtrado SOLO POR ROL: {$role}\n";
-    }
-    // CASO 2: Filtrar solo por arma (etiqueta)
-    else if (empty($role) && !empty($weapon)) {
-        // Ya configurado anteriormente
-        $log .= "Filtrado SOLO POR ARMA\n";
-    }
-    // CASO 3: Filtrar por ambos criterios
-    else if (!empty($role) && !empty($weapon)) {
-        $args['category_name'] = $role;
-        // args['tag'] ya está configurado
-        $log .= "Filtrado POR AMBOS: arma y rol={$role}\n";
+    // Configurar consulta de taxonomía para categorías (roles y gamemode)
+    $tax_query = array();
+    
+    // Añadir rol si está especificado
+    if (!empty($role)) {
+        $tax_query[] = array(
+            'taxonomy' => 'category',
+            'field'    => 'slug',
+            'terms'    => $role,
+        );
+        $log .= "Añadiendo filtro por rol: {$role}\n";
     }
     
-    // Si estamos en una página de categoría específica y no hay filtro de rol
-    if ($category > 0 && empty($role)) {
+    // Añadir gamemode si está especificado
+    if (!empty($gamemode)) {
+        $tax_query[] = array(
+            'taxonomy' => 'category',
+            'field'    => 'slug',
+            'terms'    => $gamemode,
+        );
+        $log .= "Añadiendo filtro por gamemode: {$gamemode}\n";
+    }
+    
+    // Aplicar filtros de categorías si hay alguno
+    if (!empty($tax_query)) {
+        // Si hay más de un filtro, usar relación AND para que se cumplan todos
+        if (count($tax_query) > 1) {
+            $tax_query['relation'] = 'AND';
+            $log .= "Usando relación AND entre categorías para filtrar posts que cumplan TODOS los criterios\n";
+        }
+        
+        $args['tax_query'] = $tax_query;
+        $log .= "Configurada tax_query con " . count($tax_query) . " condiciones\n";
+    }
+    
+    // Si estamos en una página de categoría específica y no hay filtro de roles ni gamemode
+    if ($category > 0 && empty($role) && empty($gamemode)) {
         $args['cat'] = $category;
         $log .= "Añadido filtro de categoría específica: {$category}\n";
     }

@@ -12,7 +12,8 @@
     let isFilterActive = false;
     let currentFilters = {
         weapon: '',
-        role: ''
+        role: '',
+        gamemode: '' // Añadido nuevo filtro para gamemode (PVE/PVP)
     };
     let $contentContainer = null;
     let $rowContainer = null;
@@ -58,6 +59,7 @@
         // Verificar si existen las secciones de filtro
         const hasWeaponsSection = $('.weapons-section').length > 0;
         const hasRolesSection = $('.roles-section').length > 0;
+        const hasGamemodeSection = $('.gamemode-section').length > 0;
         
         if (hasWeaponsSection) {
             console.log('Sección de armas encontrada - Inicializando filtros de armas');
@@ -65,6 +67,10 @@
         
         if (hasRolesSection) {
             console.log('Sección de roles encontrada - Inicializando filtros de roles');
+        }
+        
+        if (hasGamemodeSection) {
+            console.log('Sección de gamemode encontrada - Inicializando filtros de PVE/PVP');
         }
         
         // Capturar el contenido original para restaurarlo después
@@ -77,7 +83,7 @@
         initWeaponTooltips();
         
         // Añadir clases especiales a los elementos filtrables para mejor UX
-        $('.weapon-card, .role-card').addClass('filterable-element');
+        $('.weapon-card, .role-card, .gamemode-card').addClass('filterable-element');
         
         console.log('Filtros inicializados correctamente');
         
@@ -210,6 +216,50 @@
             } else {
                 console.error('Error: No se pudo determinar el rol');
                 showFeedbackMessage('No se pudo determinar el rol para filtrar', 'error');
+            }
+        });
+        
+        // Manejar eventos de clic en tarjetas de gamemode (PVE/PVP)
+        $(document).on('click', '.gamemode-card', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('Clic en gamemode');
+            
+            // Determinar el gamemode de forma directa
+            let gamemode = '';
+            
+            // Verificar si el elemento clicado tiene alguna de las clases de gamemode
+            const $element = $(this);
+            
+            if ($element.hasClass('pve')) {
+                gamemode = 'pve';
+            } else if ($element.hasClass('pvp')) {
+                gamemode = 'pvp';
+            }
+            
+            if (gamemode) {
+                console.log('Filtrando por gamemode: ' + gamemode);
+                
+                // Si es el mismo gamemode, deseleccionarlo y eliminar clase de filtro activo
+                if (currentFilters.gamemode === gamemode) {
+                    currentFilters.gamemode = '';
+                    console.log('Deseleccionando gamemode actual');
+                    
+                    // Eliminar clase de filtro activo del gamemode
+                    $element.removeClass('filter-active');
+                    
+                    showFeedbackMessage('Eliminando filtro de ' + gamemode.toUpperCase());
+                } else {
+                    currentFilters.gamemode = gamemode;
+                    console.log('Seleccionando nuevo gamemode: ' + gamemode);
+                    showFeedbackMessage('Aplicando filtro para ' + gamemode.toUpperCase());
+                }
+                
+                applyFilters();
+            } else {
+                console.error('Error: No se pudo determinar el gamemode');
+                showFeedbackMessage('No se pudo determinar el gamemode para filtrar', 'error');
             }
         });
         
@@ -363,15 +413,17 @@
         // Guardar los filtros actuales para comparar después
         let lastWeapon = currentFilters.weapon;
         let lastRole = currentFilters.role;
+        let lastGamemode = currentFilters.gamemode;
         
         // Si no hay filtros activos, restaurar el contenido original o cargar todos los posts
-        if (!currentFilters.weapon && !currentFilters.role) {
+        if (!currentFilters.weapon && !currentFilters.role && !currentFilters.gamemode) {
             console.log('No hay filtros activos, restableciendo a contenido original');
             
             // Primero, eliminar todas las clases de filtro activo
             $('.weapon-card').removeClass('filter-active');
             $('.role-card').removeClass('filter-active');
             $('.weapon-icon-tag').removeClass('filter-active');
+            $('.gamemode-card').removeClass('filter-active');
             
             // Si no hay contenido original guardado o no podemos restaurarlo,
             // cargar todos los posts directamente con AJAX en lugar de llamar a resetFilters()
@@ -387,6 +439,7 @@
                         nonce: liukinWeaponFilter.nonce,
                         weapon: '',
                         role: '',
+                        gamemode: '',
                         category: liukinWeaponFilter.current_category
                     },
                     success: function(response) {
@@ -409,6 +462,7 @@
                             $('.weapon-card').removeClass('filter-active');
                             $('.role-card').removeClass('filter-active');
                             $('.weapon-icon-tag').removeClass('filter-active');
+                            $('.gamemode-card').removeClass('filter-active');
                             
                             console.log('Todos los posts cargados exitosamente al desmarcar filtros');
                         } else {
@@ -435,6 +489,7 @@
         // Guardar los filtros como datos claros y normalizados
         let weaponFilter = currentFilters.weapon ? currentFilters.weapon.trim().toLowerCase() : '';
         let roleFilter = currentFilters.role ? currentFilters.role.trim().toLowerCase() : '';
+        let gamemodeFilter = currentFilters.gamemode ? currentFilters.gamemode.trim().toLowerCase() : '';
         
         // Normalizar el nombre del arma para asegurar consistencia
         if (weaponFilter) {
@@ -508,7 +563,7 @@
         // No mostrar indicador de carga
         // showLoadingIndicator();
         
-        console.log('Aplicando filtros - Arma: ' + (weaponFilter || 'ninguna') + ', Rol: ' + (roleFilter || 'ninguno'));
+        console.log('Aplicando filtros - Arma: ' + (weaponFilter || 'ninguna') + ', Rol: ' + (roleFilter || 'ninguno') + ', Gamemode: ' + (gamemodeFilter || 'ninguno'));
         
         // Variable para prevenir parpadeos
         let isProcessing = true;
@@ -525,6 +580,7 @@
                 nonce: liukinWeaponFilter.nonce,
                 weapon: weaponFilter,
                 role: roleFilter,
+                gamemode: gamemodeFilter,
                 category: liukinWeaponFilter.current_category
             },
             success: function(response) {
@@ -537,9 +593,10 @@
                     // Guardar los filtros actuales antes de reemplazar el contenido
                     let savedWeapon = currentFilters.weapon;
                     let savedRole = currentFilters.role;
+                    let savedGamemode = currentFilters.gamemode;
                     
                     console.log('Filtros guardados antes de reemplazar contenido - Arma: ' + 
-                        (savedWeapon || 'ninguna') + ', Rol: ' + (savedRole || 'ninguno'));
+                        (savedWeapon || 'ninguna') + ', Rol: ' + (savedRole || 'ninguno') + ', Gamemode: ' + (savedGamemode || 'ninguno'));
                     
                     // No mostrar mensajes de feedback
                     // let resultCount = response.count || 0;
@@ -557,9 +614,10 @@
                     // Restaurar los filtros que teníamos activos
                     currentFilters.weapon = savedWeapon;
                     currentFilters.role = savedRole;
+                    currentFilters.gamemode = savedGamemode;
                     
                     console.log('Filtros restaurados después de reemplazar contenido - Arma: ' + 
-                        (currentFilters.weapon || 'ninguna') + ', Rol: ' + (currentFilters.role || 'ninguno'));
+                        (currentFilters.weapon || 'ninguna') + ', Rol: ' + (currentFilters.role || 'ninguno') + ', Gamemode: ' + (currentFilters.gamemode || 'ninguno'));
                     
                     // Actualizar estado del filtro
                     isFilterActive = true;
@@ -570,6 +628,7 @@
                     // Asegurarnos de que los filtros siguen siendo interactivos
                     $('.role-card').removeClass('disabled');
                     $('.weapon-card').removeClass('disabled');
+                    $('.gamemode-card').removeClass('disabled');
                     
                     // Re-inicializar eventos de clic en la nueva versión del contenido
                     convertIconsToFilters();
@@ -638,14 +697,16 @@
         // Guardar filtros antes de resetear para depuración
         let oldWeapon = currentFilters.weapon;
         let oldRole = currentFilters.role;
+        let oldGamemode = currentFilters.gamemode;
         
         // Reiniciar filtros
         currentFilters = {
             weapon: '',
-            role: ''
+            role: '',
+            gamemode: ''
         };
         
-        console.log('Filtros anteriores - Arma: ' + (oldWeapon || 'ninguna') + ', Rol: ' + (oldRole || 'ninguno'));
+        console.log('Filtros anteriores - Arma: ' + (oldWeapon || 'ninguna') + ', Rol: ' + (oldRole || 'ninguno') + ', Gamemode: ' + (oldGamemode || 'ninguno'));
         console.log('Restableciendo todos los filtros...');
         
         // No mostrar mensaje de feedback
@@ -744,6 +805,7 @@
                 nonce: liukinWeaponFilter.nonce,
                 weapon: '',
                 role: '',
+                gamemode: '',
                 category: liukinWeaponFilter.current_category
             },
             success: function(response) {
@@ -943,6 +1005,7 @@
         $('.weapon-card').removeClass('filter-active');
         $('.weapon-icon-tag').removeClass('filter-active');
         $('.weapon-item-static').removeClass('filter-active');
+        $('.gamemode-card').removeClass('filter-active');
         
         // Resaltar filtro de rol activo si existe
         if (currentFilters.role) {
@@ -971,14 +1034,11 @@
                     }
                 }
             });
-            
-            // También aplicar a las etiquetas de armas en los posts
-            $('.weapon-icon-tag').each(function() {
-                const thisWeapon = $(this).data('weapon') || $(this).attr('title') || $(this).attr('alt');
-                if (thisWeapon && thisWeapon.trim().toLowerCase() === weaponName) {
-                    $(this).addClass('filter-active');
-                }
-            });
+        }
+        
+        // Resaltar filtro de gamemode activo si existe
+        if (currentFilters.gamemode) {
+            $('.gamemode-card.' + currentFilters.gamemode).addClass('filter-active');
         }
         
         console.log('Indicadores visuales actualizados');

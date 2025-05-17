@@ -86,6 +86,33 @@ if (is_category('builds')) {
         echo '</div>'; // Cierre de roles-grid
         echo '</div>'; // Cierre de roles-section
         
+        // Nueva sección de filtros PVE y PVP
+        echo '<div class="gamemode-section">';
+        echo '<div class="gamemode-grid">';
+        
+        // PVE
+        echo '<div class="gamemode-card pve" data-gamemode="pve">';
+        echo '<div class="gamemode-icon">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1712057359/cuarto_check.png" alt="PVE">';
+        echo '</div>';
+        echo '<div class="gamemode-info">';
+        echo '<h3>PVE</h3>';
+        echo '</div>';
+        echo '</div>';
+        
+        // PVP
+        echo '<div class="gamemode-card pvp" data-gamemode="pvp">';
+        echo '<div class="gamemode-icon">';
+        echo '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1747451465/pvp_pxkwny.png" alt="PVP">';
+        echo '</div>';
+        echo '<div class="gamemode-info">';
+        echo '<h3>PVP</h3>';
+        echo '</div>';
+        echo '</div>';
+        
+        echo '</div>'; // Cierre de gamemode-grid
+        echo '</div>'; // Cierre de gamemode-section
+        
         // Sección de armas - rehecha completamente
         echo '<div class="weapons-static-section">';
         echo '<div class="weapons-wrapper">';
