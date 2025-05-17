@@ -2419,8 +2419,8 @@ body.category-builds .pagination .page-numbers:hover {
 
 /* Para la página de archivo */
 .name-archive .weapon-icons {
-       display: flex;
-    margin-top: -96px;
+    display: flex;
+    margin-top: -100px;
     margin-left: -113px;
     justify-content: center;
     width: 100%;
