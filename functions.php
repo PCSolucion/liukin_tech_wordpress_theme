@@ -827,6 +827,18 @@ add_action('wp_ajax_nopriv_liukin_filter_posts_by_criteria', 'liukin_filter_post
 // Mantener la función original para compatibilidad
 add_action('wp_ajax_liukin_filter_posts_by_weapon', 'liukin_filter_posts_by_criteria');
 add_action('wp_ajax_nopriv_liukin_filter_posts_by_weapon', 'liukin_filter_posts_by_criteria');
+add_filter('body_class','add_category_to_single');
+  function add_category_to_single($classes) {
+    if (is_single() ) {
+      global $post;
+      foreach((get_the_category($post->ID)) as $category) {
+        // add category slug to the $classes array
+        $classes[] = $category->category_nicename.'2';
+      }
+    }
+    // return the $classes array
+    return $classes;
+  }
 
 /**
  * Función de depuración para registrar información sobre etiquetas y filtrados
