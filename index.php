@@ -2,20 +2,8 @@
 // Cargar header
 get_header();
 
-// Verificar si estamos en la categoría de builds
-$is_builds_category = false;
-$categories = get_the_category();
-if (!empty($categories)) {
-    foreach ($categories as $category) {
-        if ($category->slug === 'builds') {
-            $is_builds_category = true;
-            break;
-        }
-    }
-}
-
-// Cargar el template apropiado según la categoría
-if ($is_builds_category) {
+// Mostrar la cabecera especial solo en la categoría 'builds', nunca en la home
+if (is_category('builds')) {
     get_template_part('template-parts/search-form-builds', 'search-form-builds');
 } else {
     get_template_part('template-parts/search-form', 'search-form');

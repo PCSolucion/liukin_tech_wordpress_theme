@@ -3409,3 +3409,12 @@ body.category-builds .logow img {
         font-size: 1.1rem;
     }
 }
+.builds2 p img{
+	width:1100px !important;
+}
+.builds2{
+	background-color: #111111 !important;
+}
+.builds2 h1{
+	color:white;
+}
